@@ -47,6 +47,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+
 public class MapActivity extends Activity{
 
 	private GoogleMap map;
@@ -67,13 +68,6 @@ public class MapActivity extends Activity{
 
 	private ArrayList<String> eventsID;
 
-	HttpConnect post;
-
-
-	String IP_Server="goingonapp.comuf.com";//IP DE NUESTRO SERVIDOR
-	String URL_connect="http://"+IP_Server+"/getEventList.php";//Ruta en donde estan nuestros archivos
-
-
 	private ProgressDialog pDialog;
 
 	@Override
@@ -92,13 +86,11 @@ public class MapActivity extends Activity{
 				.getMap();
 		map.setMyLocationEnabled(true);
 
-		post= new HttpConnect();
-
 		eventsMap = new contextEventsMap();
 
 		userEmail = getIntent().getExtras().getString("userEmail");
 
-		fbUserId = getIntent().getExtras().getString("fbUserId");
+		//fbUserId = getIntent().getExtras().getString("fbUserId");
 
 		LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		Criteria criteria = new Criteria();
@@ -287,11 +279,11 @@ public class MapActivity extends Activity{
 		postparameters2send.add(new BasicNameValuePair("email",userEmail));
 
 		//realizamos una peticion y como respuesta obtenes un array JSON
-		JSONArray jdata=post.getserverdata(postparameters2send, URL_connect);
+		//JSONArray jdata=post.getserverdata(postparameters2send, URL_connect);
 		SystemClock.sleep(950);
 
 		//si lo que obtuvimos no es null
-		if (jdata!=null && jdata.length() > 0){
+		/**if (jdata!=null && jdata.length() > 0){
 
 			JSONObject json_data; //creamos un objeto JSON
 			try {
@@ -336,7 +328,8 @@ public class MapActivity extends Activity{
 		}else{	//json obtenido invalido verificar parte WEB.
 			Log.e("JSON  ", "ERROR");
 			return false;
-		}
+		}**/
+		return true;
 	}
 
 	private void updateUI() {

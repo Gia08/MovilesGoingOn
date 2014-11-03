@@ -7,17 +7,15 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.sql.Date;
 import java.sql.Time;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
@@ -34,14 +32,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.net.ParseException;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -73,11 +68,6 @@ public class AddEventActivity extends Activity {
 	private int createEventStatus;
 	private MobileServiceClient mClient;
 	private ProgressBar mProgressBar;
-	
-	Date sqlinitDay;
-	Date sqlfinalDay;
-	Time sqlinitTime;
-	Time sqlfinalTime;
 
 	// Values for email and password at the time of the login attempt.
 	private String mEventName;
@@ -119,11 +109,6 @@ public class AddEventActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		sqlinitDay = new Date(0,0,0);
-		sqlfinalDay = new Date(0,0,0);
-		sqlinitTime = new Time(0,0,0);
-		sqlfinalTime = new Time(0,0,0);
-		
 		context = (Context) this;
 		
 		setContentView(R.layout.activity_add_event);
@@ -462,30 +447,27 @@ public class AddEventActivity extends Activity {
 					"https://goingon.azure-mobile.net/",
 					"NFAMhPBZapIrxYSYOgMIYSTZpTSaAJ18",
 					this).withFilter(new ProgressFilter());
-			// Get the Mobile Service Table instance to use
-			//mUsersTable = mClient.getTable(Users.class);
-			// Load the items from the Mobile Service
-			SimpleDateFormat formatDate = new SimpleDateFormat("yyyyMMdd");
-			SimpleDateFormat formatTime = new SimpleDateFormat("hh:mm:ss");	      
+			
+			java.util.Date initdt = new java.util.Date(Integer.parseInt(initDateYear)-1900,Integer.parseInt(initDateMonth)-1,Integer.parseInt(initDateDay));
+			java.text.SimpleDateFormat initsdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String initDate = initsdf.format(initdt);
+			
+			java.util.Date enddt = new java.util.Date(Integer.parseInt(finalDateYear)-1900,Integer.parseInt(finalDateMonth)-1,Integer.parseInt(finalDateDay));
+			java.text.SimpleDateFormat endsdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String endDate = endsdf.format(enddt);
+			
+			java.util.Date inittime = new java.util.Date(0,0,0,Integer.parseInt(initTimeHour),Integer.parseInt(initTimeMinute), 0);
+			java.text.SimpleDateFormat inittimesdf = new java.text.SimpleDateFormat("HH:mm:ss");
+			String initTime = inittimesdf.format(inittime);
+			
+			java.util.Date finaltime = new java.util.Date(0,0,0,Integer.parseInt(finalTimeHour),Integer.parseInt(finalTimeMinute), 0);
+			java.text.SimpleDateFormat finaltimesdf = new java.text.SimpleDateFormat("HH:mm:ss");
+			String finalTime = endsdf.format(enddt);
+	    
 	    
 			
-			try { 
-				Date initDay = (Date) formatDate.parse(initDateYear+initDateMonth+initDateDay);  
-				Date endDay = (Date) formatDate.parse(finalDateYear+finalDateMonth+finalDateDay);  
-				Time initTime = (Time) formatTime.parse(initTimeHour+":"+initTimeMinute+":00");  
-				Time endTime = (Time) formatTime.parse(finalTimeHour+":"+finalTimeMinute+":00");   
-				sqlinitDay = new java.sql.Date(initDay.getTime());
-				sqlfinalDay = new java.sql.Date(endDay.getTime());
-				sqlinitTime = new java.sql.Time(initTime.getTime());
-				sqlfinalTime = new java.sql.Time(endTime.getTime());
-				
-			} catch (Exception e) {  
-			    // TODO Auto-generated catch block  
-			    e.printStackTrace();  
-			}
-
-	    	createEventStatus = createEvent(eventName, eventDescr,  eventPrice,  eventCategory,
-					 sqlinitDay, sqlfinalDay, sqlinitTime, sqlfinalTime);
+			createEventStatus = createEvent(eventName, eventDescr,  eventPrice,  eventCategory,
+					initDate, endDate, initTime, finalTime);
 
 		} catch (MalformedURLException e) {
 			Toast.makeText(getApplicationContext(), "There was an error creating the Mobile Service. Verify the URL " , Toast.LENGTH_LONG).show();  
@@ -499,10 +481,10 @@ public class AddEventActivity extends Activity {
 		private int id;		
 		private String name;		
 		private String description;
-		private Date startDate;
-		private Date endDate;
-		private Time startTime;
-		private Time endTime;
+		private String startDate;
+		private String endDate;
+		private String startTime;
+		private String endTime;
 		private String eventPrice;
 		
 		private int idTypeEvent;
@@ -511,12 +493,8 @@ public class AddEventActivity extends Activity {
 		
 		private double latitude;
 		private double longitude;
-		private String pUserMail;
-		
-		
-		
-		private int idUsers;
-		private int idAdress;
+		private String Username;
+	
 	}
 	
 	public class AddEventResult{
@@ -525,21 +503,24 @@ public class AddEventActivity extends Activity {
 	
 	//Valida el estado del logueo solamente necesita como parametros el usuario y passw
 	public int createEvent(String eventName,String eventDescr, String eventPrice, String eventCategory,
-			Date sqlinitDay, Date sqlfinalDay, Time sqlinitTime, Time sqlfinalTime ) {
+			String initDate, String endDate, String initTime, String endTime ){
 		
 		event newEvent = new event();
 		
-		newEvent.name = "Fiesta de Gia";
-		newEvent.description = "Fiesta por cierre de semestre";
-		newEvent.eventPrice = "1000";
-		newEvent.latitude = 8.88;
-		newEvent.longitude = 11.11;
-		newEvent.pUserMail = "ser@g.com";
-		newEvent.startDate = new Date(2,4,2014) ;
-		newEvent.endDate = new Date(2,4,2014);
-		newEvent.startTime = new Time(2,40,0);
-		newEvent.endTime = new Time(2,50,0);
+		newEvent.name = eventName;
+		newEvent.description = eventDescr;
+		newEvent.eventPrice = eventPrice;
+		newEvent.latitude = mLatitude;
+		newEvent.longitude = mLongitude;
+		newEvent.Username = mUserMail;
+	    
+		newEvent.startDate = initDate;
+		newEvent.endDate = endDate;
+		newEvent.startTime =initTime;
+		newEvent.endTime = endTime;
 		newEvent.idTypeEvent = 1;
+		newEvent.idTypePrivacyEvent = 1;
+		newEvent.idTypeStateEvent = 1;
 		
 
 		mClient.invokeApi("addEvent",newEvent, AddEventResult.class, new ApiOperationCallback<AddEventResult>() {
