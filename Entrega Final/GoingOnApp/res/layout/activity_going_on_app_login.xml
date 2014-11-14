@@ -20,11 +20,12 @@
         android:visibility="gone" >
 
         <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp" />
-
+		android:id="@+id/progressBar1"
+		style="?android:attr/progressBarStyleLarge"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true" />
+        
         <TextView
             android:id="@+id/login_status_message"
             android:layout_width="wrap_content"
@@ -33,6 +34,7 @@
             android:fontFamily="sans-serif-light"
             android:text="@string/login_progress_signing_in"
             android:textAppearance="?android:attr/textAppearanceMedium" />
+        
     </LinearLayout>
 
     <!-- Login form -->
@@ -116,6 +118,8 @@
                 android:paddingRight="32dp"
                 android:background="@color/GO_light_gray"
                 android:text="@string/action_sign_up" />
+            
+           
         </LinearLayout>
 
 </LinearLayout>

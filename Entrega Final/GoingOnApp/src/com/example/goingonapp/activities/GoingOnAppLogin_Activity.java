@@ -26,6 +26,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -70,9 +71,7 @@ public class GoingOnAppLogin_Activity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		 mProgressBar = new ProgressBar(getApplicationContext());
-				
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
+     	requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_going_on_app_login);
 		
 		if (savedInstanceState == null) {
@@ -91,6 +90,10 @@ public class GoingOnAppLogin_Activity extends FragmentActivity {
 		/**
 		 * Set up the Login Form
 		 */
+		
+		mProgressBar = (ProgressBar)findViewById(R.id.progressBar1);
+     	mProgressBar.setVisibility(View.GONE);
+     	
 		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
 		mEmailView = (EditText) findViewById(R.id.email);
 		mEmailView.setText(mEmail);
@@ -240,7 +243,7 @@ public class GoingOnAppLogin_Activity extends FragmentActivity {
 	            } else {
 	            	if (loginUserResult.result != 1){	            		
 	            		Toast.makeText(getApplicationContext(), "Error: Email/Password Incorrect" , Toast.LENGTH_LONG).show(); 
-	            		mPasswordView.setError(getString(R.string.error_invalid_password));
+	            		mPasswordView.setError(getString(R.string.error_incorrect_password));
 	        			focusView = mPasswordView;
 	        			focusView.requestFocus();
 	            	}
@@ -316,7 +319,11 @@ private class ProgressFilter implements ServiceFilter {
 
 				@Override
 				public void run() {
-					if (mProgressBar != null) mProgressBar.setVisibility(ProgressBar.VISIBLE);
+					Log.d("GoingOn", "Entra al hilo");
+					if (mProgressBar != null){ 
+						mProgressBar.setVisibility(ProgressBar.VISIBLE);
+						Log.d("GoingOn", "Se despliega el progress bar");
+					}
 				}
 			});
 			
