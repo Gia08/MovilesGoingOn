@@ -3,6 +3,7 @@ package com.example.goingonapp.activities;
 import java.net.MalformedURLException;
 import java.util.List;
 
+import com.example.goingonapp.R;
 import com.example.goingonapp.fragments.FbLoginFragment;
 import com.example.goingonapp.objects.LoginUser;
 import com.example.goingonapp.objects.LoginUserResult;

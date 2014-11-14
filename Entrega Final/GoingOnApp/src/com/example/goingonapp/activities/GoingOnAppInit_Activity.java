@@ -3,6 +3,8 @@ package com.example.goingonapp.activities;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.example.goingonapp.R;
+
 
 
 import android.os.Bundle;
