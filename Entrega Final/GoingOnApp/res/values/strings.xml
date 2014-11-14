@@ -23,13 +23,19 @@
     <string name="error_no_internet">No internet access</string>
     <string name="error_user_already_exists">Given email already exists</string>
     <string name="error_user_doesnt_exist">User doesn\'t exists</string>
-
+	<string name="app_id">716737715041844</string>
+    
     <!-- Resources related with colors -->
     <color name="orange">#99F15a24</color>
     <color name="GO_light_gray">#999999</color>
     <color name="GO_dark_gray">#FF666666</color>
 
-    <string name="title_activity_going_on_app_map_">GoingOnAppMap_Activity</string>
-    <string name="title_activity_going_on_app_sign_up_">GoingOnAppSignUp_Activity</string>
+    <string name="title_activity_going_on_app_map_">GoingOnApp</string>
+    <string name="title_activity_going_on_app_sign_up_">GoingOnApp</string>
 
+    <!-- Resources for going_on_app_map Menu -->
+    <string name="action_refresh">Refresh</string>
+    <string name="action_add">Add Event</string>
+    <string name="action_logout">Log Out</string>
+    
 </resources>

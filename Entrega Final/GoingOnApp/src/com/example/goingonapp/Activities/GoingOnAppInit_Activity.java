@@ -1,7 +1,9 @@
-package com.example.goingonapp.Activities;
+package com.example.goingonapp.activities;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import com.example.goingonapp.R;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -12,7 +14,7 @@ import android.view.WindowManager;
 
 public class GoingOnAppInit_Activity extends Activity {
 
-	@Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
     	requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -32,5 +34,6 @@ public class GoingOnAppInit_Activity extends Activity {
     	super.onDestroy();  
         android.os.Debug.stopMethodTracing();
     }
+    
     
 }
