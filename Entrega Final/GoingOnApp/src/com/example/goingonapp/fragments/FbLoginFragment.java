@@ -30,7 +30,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.goingonapp.R;
+
 import com.example.goingonapp.activities.GoingOnAppLogin_Activity;
 import com.facebook.Request;
 import com.facebook.Response;

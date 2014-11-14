@@ -1,8 +1,6 @@
 package com.example.goingonapp.activities;
 
-import com.example.goingonapp.R;
-import com.example.goingonapp.R.layout;
-import com.example.goingonapp.R.menu;
+
 
 import android.os.Bundle;
 import android.app.Activity;
