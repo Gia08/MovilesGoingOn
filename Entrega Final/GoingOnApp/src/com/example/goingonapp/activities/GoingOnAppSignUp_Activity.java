@@ -261,10 +261,10 @@ private int RegisterUser() {
 	            if (checked){
 	            	mUserType = 1;
 	            	GPSTracker gps = new GPSTracker(this);
-	            	if(gps.canGetLocation()){ // gps enabled} // return boolean true/false
+	            	if(gps.canGetLocation()){ 
 	            		mLatitude = gps.getLatitude();
 	                    mLongitude = gps.getLongitude();
-	                    Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + mLatitude + "\nLong: " + mLongitude, Toast.LENGTH_LONG).show();    
+	                    Toast.makeText(getApplicationContext(), "Your Location is \nLat: " + mLatitude + "\nLong: " + mLongitude, Toast.LENGTH_LONG).show();    
 	                }else{
 	                    gps.showSettingsAlert();
 	                } 	

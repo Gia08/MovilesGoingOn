@@ -72,14 +72,12 @@ public class GoingOnAppLogin_Activity extends FragmentActivity {
 		setContentView(R.layout.activity_going_on_app_login);
 		
 		if (savedInstanceState == null) {
-			// Add the fragment on initial activity setup
 			fbLoginFragment = new FbLoginFragment();
 			getSupportFragmentManager()
 			.beginTransaction()
 			.add(android.R.id.content, fbLoginFragment)
 			.commit(); 
 		} else {
-			// Or set the fragment from restored state info
 			fbLoginFragment = (FbLoginFragment) getSupportFragmentManager()
 					.findFragmentById(android.R.id.content);
 		}
