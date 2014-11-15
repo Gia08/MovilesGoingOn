@@ -23,6 +23,7 @@
     <string name="login_progress_signing_in">Signing in&#8230;</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
+    <string name="error_confirmed_password">The password doesn´t match</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="error_no_location_found">No location found</string>

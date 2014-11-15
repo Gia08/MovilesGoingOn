@@ -11,12 +11,9 @@ import com.example.goingonapp.objects.LoginUserResult;
 import com.facebook.Session;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
-import com.microsoft.windowsazure.mobileservices.NextServiceFilterCallback;
-import com.microsoft.windowsazure.mobileservices.ServiceFilter;
-import com.microsoft.windowsazure.mobileservices.ServiceFilterRequest;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
-import com.microsoft.windowsazure.mobileservices.ServiceFilterResponseCallback;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -26,7 +23,6 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -65,6 +61,7 @@ public class GoingOnAppLogin_Activity extends FragmentActivity {
 	private EditText mPasswordView;
 	private TextView mLoginStatusMessageView;
 	private View focusView;
+	private ProgressDialog pDialog;
 	
 	
 	@Override
@@ -170,7 +167,7 @@ public class GoingOnAppLogin_Activity extends FragmentActivity {
 			mClient = new MobileServiceClient(
 					"https://goingon.azure-mobile.net/",
 					"NFAMhPBZapIrxYSYOgMIYSTZpTSaAJ18",
-					this).withFilter(new ProgressFilter());
+					this);
 			processTableData();
 		} catch (MalformedURLException e) {
 			Toast.makeText(getApplicationContext(), "There was an error creating the Mobile Service. Verify the URL" , Toast.LENGTH_LONG).show(); 
@@ -190,7 +187,7 @@ public class GoingOnAppLogin_Activity extends FragmentActivity {
 		mPassword = mPasswordView.getText().toString();
 
 		boolean cancel = false;
-		View focusView = null;
+		focusView = null;
 
 		// Check for a valid password.
 		if (TextUtils.isEmpty(mPassword)) {
@@ -222,6 +219,11 @@ public class GoingOnAppLogin_Activity extends FragmentActivity {
 			// Show a progress spinner, and kick off a background task to
 			// perform the user login attempt.
 			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
+			pDialog = new ProgressDialog(GoingOnAppLogin_Activity.this);
+	        pDialog.setMessage("Logging....");
+	        pDialog.setIndeterminate(false);
+	        pDialog.setCancelable(false);
+	        pDialog.show();
 			addUser(1);
 		}
 	}
@@ -239,15 +241,18 @@ public class GoingOnAppLogin_Activity extends FragmentActivity {
 	        @Override
 	        public void onCompleted(LoginUserResult loginUserResult, Exception error, ServiceFilterResponse response) {
 	            if (error != null) {
+	            	pDialog.dismiss();
 	            	Toast.makeText(getApplicationContext(), "Error: " + error , Toast.LENGTH_LONG).show();
 	            } else {
-	            	if (loginUserResult.result != 1){	            		
+	            	if (loginUserResult.result != 1){	
+	            		pDialog.dismiss();
 	            		Toast.makeText(getApplicationContext(), "Error: Email/Password Incorrect" , Toast.LENGTH_LONG).show(); 
 	            		mPasswordView.setError(getString(R.string.error_incorrect_password));
 	        			focusView = mPasswordView;
 	        			focusView.requestFocus();
 	            	}
 	            	else{
+	            		pDialog.dismiss();
 	            		finishedAuth();
 	            	}
 	            }
@@ -308,41 +313,4 @@ public class GoingOnAppLogin_Activity extends FragmentActivity {
 	public void setFbUserId(String id) {
 		fbUserId = id;
 	}
-	
-private class ProgressFilter implements ServiceFilter {
-		
-	 
-		@Override
-		public void handleRequest(ServiceFilterRequest request, NextServiceFilterCallback nextServiceFilterCallback,
-				final ServiceFilterResponseCallback responseCallback) {
-			runOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					Log.d("GoingOn", "Entra al hilo");
-					if (mProgressBar != null){ 
-						mProgressBar.setVisibility(ProgressBar.VISIBLE);
-						Log.d("GoingOn", "Se despliega el progress bar");
-					}
-				}
-			});
-			
-			nextServiceFilterCallback.onNext(request, new ServiceFilterResponseCallback() {
-				
-				@Override
-				public void onResponse(ServiceFilterResponse response, Exception exception) {
-					runOnUiThread(new Runnable() {
-
-						@Override
-						public void run() {
-							if (mProgressBar != null) mProgressBar.setVisibility(ProgressBar.GONE);
-						}
-					});
-					
-					if (responseCallback != null)  responseCallback.onResponse(response, exception);
-				}
-			});
-		}
-	}
-
 }
