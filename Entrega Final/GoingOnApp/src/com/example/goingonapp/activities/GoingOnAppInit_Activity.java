@@ -4,6 +4,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.example.goingonapp.R;
+import com.facebook.Session;
 
 
 
@@ -26,9 +27,9 @@ public class GoingOnAppInit_Activity extends Activity {
 		new Timer().schedule(new TimerTask(){
 			public void run() { 
 				Intent intent = new Intent(GoingOnAppInit_Activity.this, GoingOnAppLogin_Activity.class);
-				intent.putExtra("sessionFb", "open");
 				startActivity(intent);
 				finish();
+				
 			}
 		}, 1000); 
     } 

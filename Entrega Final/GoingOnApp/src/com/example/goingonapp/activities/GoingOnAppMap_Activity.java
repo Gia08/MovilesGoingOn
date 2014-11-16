@@ -2,11 +2,18 @@ package com.example.goingonapp.activities;
 
 
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.example.goingonapp.R;
 import com.example.goingonapp.objects.ContextEventsList;
+import com.example.goingonapp.objects.LoginUserResult;
+import com.example.goingonapp.objects.MapEventListResult;
 import com.facebook.Session;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -15,6 +22,15 @@ import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.microsoft.windowsazure.mobileservices.ApiJsonOperationCallback;
+import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
+import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import android.location.Criteria;
 import android.location.Location;
@@ -31,6 +47,7 @@ import android.content.pm.ResolveInfo;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class GoingOnAppMap_Activity extends Activity {
 
@@ -39,16 +56,12 @@ public class GoingOnAppMap_Activity extends Activity {
 	 */
 	private String userEmail;
 	private String userType;
-	private int logstatus;
-	private int typeUser;
-	private String fbUserId = null;
+	private MobileServiceClient mClient;
 	
 	/**
 	 * UI References
 	 */
 	private GoogleMap map;
-	private ContextEventsList eventsMap;
-	private ArrayList<String> eventsID;
 	private ProgressDialog pDialog;
 	
 	@Override
@@ -56,23 +69,27 @@ public class GoingOnAppMap_Activity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_going_on_app_map);
 		
+		/**
+		 * SetUp Map Activity
+		 */
+		pDialog = new ProgressDialog(GoingOnAppMap_Activity.this);
+        pDialog.setMessage("Loading Events....");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(false);
+        pDialog.show();
 		if (userType == null){
 			userType = "2";
 		}
 		else{
 			userType = getIntent().getExtras().getString("userType");
 		}
-		Log.d("GoingOn", "El userType(onCreate) es: " + userType);
 		if (userType == "1"){//Login with System
 			userEmail = getIntent().getExtras().getString("userEmail");
 		}
-		else if (userType == "2"){//Login with Facebook
+		else{//Login with Facebook
 			userEmail = getIntent().getExtras().getString("fbUserId");
 		}
-		else{
-			Log.d("GoingOn", "No funciono");
-		}
-		
+				
 		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
 				.getMap();
 		map.setMyLocationEnabled(true);
@@ -120,25 +137,60 @@ public class GoingOnAppMap_Activity extends Activity {
 
 		});
 
+		updateEventsInfo();
 	}
 	
-	///		-------------------------Zooming camera to position user-----------------
-		private void centerMapOnMyLocation(Location location) {
 
-			map.animateCamera(CameraUpdateFactory.newLatLngZoom(
-					new LatLng(location.getLatitude(), location.getLongitude()), 13));
+	/**
+	 * Map function: Zooming camera to user position
+	 * @param location
+	 */
+	private void centerMapOnMyLocation(Location location) {
 
-			CameraPosition cameraPosition = new CameraPosition.Builder()
-			.target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
-			.zoom(17)                   // Sets the zoom
-			.bearing(90)                // Sets the orientation of the camera to east
-			.tilt(40)                   // Sets the tilt of the camera to 30 degrees
-			.build();                   // Creates a CameraPosition from the builder
-			map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+		map.animateCamera(CameraUpdateFactory.newLatLngZoom(
+				new LatLng(location.getLatitude(), location.getLongitude()), 13));
 
+		CameraPosition cameraPosition = new CameraPosition.Builder()
+		.target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
+		.zoom(17)                   // Sets the zoom
+		.bearing(90)                // Sets the orientation of the camera to east
+		.tilt(40)                   // Sets the tilt of the camera to 30 degrees
+		.build();                   // Creates a CameraPosition from the builder
+		map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+	}
+			
+	public void updateEventsInfo() {
+		try {
+			mClient = new MobileServiceClient(
+					"https://goingon.azure-mobile.net/",
+					"NFAMhPBZapIrxYSYOgMIYSTZpTSaAJ18",
+					this);
+			processEventList();
+		} catch (MalformedURLException e) {
+			Toast.makeText(getApplicationContext(), "There was an error creating the Mobile Service. Verify the URL" , Toast.LENGTH_LONG).show(); 
 		}
-		/////----------------------------------Zooming camera to position user-----------------
+	}
+	
+	public void processEventList(){
 		
+		mClient.invokeApi("geteventinfomarket",null, "GET", null, new ApiJsonOperationCallback() {
+	        @Override
+	        public void onCompleted(JsonElement jsonElement, Exception e, ServiceFilterResponse serviceFilterResponse) {
+	        	JsonArray json_event_list = jsonElement.getAsJsonArray();
+	        	for(int i = 0; i < json_event_list.size(); i++)
+	        	{
+	        		Log.d("GoingOn", "Item: "+json_event_list.get(i)+"\n");
+	        		JsonObject item = json_event_list.get(i).getAsJsonObject();
+	        		Log.d("GoingOn", item.get("name").toString());
+	        	    // do some stuff....
+	        	}
+	        	//Log.d("GoingOn", "JsonElement: "+ jsonElement.getAsJsonObject());
+	        	pDialog.dismiss();	            
+	        }
+	    });	
+		
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -155,8 +207,8 @@ public class GoingOnAppMap_Activity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.action_refresh: {
-				updateEventList();
+			case R.id.action_user_profile: {
+				userProfile();
 				break;
 			}
 			
@@ -172,8 +224,10 @@ public class GoingOnAppMap_Activity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	public void updateEventList(){
+	/**
+	 * Menu Functions
+	 */
+	public void userProfile(){
 		Intent intent = new Intent(this, GoingOnAppMobileUser_Activity.class);
 		intent.putExtra("userEmail", userEmail);
 		startActivity(intent);
@@ -202,17 +256,6 @@ public class GoingOnAppMap_Activity extends Activity {
 		// Start an activity if it's safe
 		if (isIntentSafe) {
 			startActivity(intent);}
-		/**Intent intent = new Intent(this, GoingOnAppLogin_Activity.class);
-		Log.d("GoingOn", "El userType es: " + userType);
-		if (userType == "2"){//Login with Facebook
-			Log.d("GoingOn", "Enviando SessionFb");
-			intent.putExtra("sessionFb", "close");			
-		}
-		else{
-			intent.putExtra("sessionFb", "open");
-		}
-		startActivity(intent);
-		finish();**/
 	}
 
 }

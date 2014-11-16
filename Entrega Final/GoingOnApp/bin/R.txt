@@ -159,8 +159,8 @@ int drawable ic_user_picture 0x7f020053
 int drawable robert_downey_j 0x7f020054
 int id action_add 0x7f050051
 int id action_logout 0x7f050052
-int id action_refresh 0x7f050050
 int id action_settings 0x7f05004f
+int id action_user_profile 0x7f050050
 int id authButton 0x7f05004d
 int id button_cancel_create_event 0x7f05001a
 int id button_cancel_sign_up 0x7f050033
