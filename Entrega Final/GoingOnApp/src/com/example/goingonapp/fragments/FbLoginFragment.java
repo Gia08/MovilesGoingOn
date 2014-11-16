@@ -119,14 +119,20 @@ public class FbLoginFragment extends Fragment {
 
 	            @Override
 	            public void onCompleted(GraphUser user, Response response) {
-	                if (user != null) {
+	            	
+	            	if (user != null) {
 						// Display the parsed user info
 	                    String userMail = user.getProperty("email").toString();
 	                    String userName = user.getName();
 	                    GoingOnAppLogin_Activity activity = (GoingOnAppLogin_Activity) getActivity();
-
-	                    activity.setFbUserId(user.getId());
-	                    activity.executeTaskFb(userMail, userName);
+	                    if (activity.sessionFB == "cerrar"){
+	                        session.closeAndClearTokenInformation();
+	                    }
+	                    else{
+	                    	activity.setFbUserId(user.getId());	                    
+	                    	activity.finishedAuthFacebook(userMail, userName);
+	                    	
+	                    }
 	                }
 	            }
 	        }).executeAsync();

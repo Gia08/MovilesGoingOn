@@ -23,6 +23,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -41,8 +42,9 @@ public class GoingOnAppLogin_Activity extends FragmentActivity {
 	 */
 	private FbLoginFragment fbLoginFragment;
 	private String fbUserId = null;
-	private String mEmailFB = "";
-	private String mUserNameFB ="";
+	private String userMail;
+	private String userName;
+	public String sessionFB;
 	
 	/**
 	 * Variables related to Login 
@@ -71,6 +73,8 @@ public class GoingOnAppLogin_Activity extends FragmentActivity {
      	requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_going_on_app_login);
 		
+	    sessionFB = "cerrar";
+		
 		if (savedInstanceState == null) {
 			fbLoginFragment = new FbLoginFragment();
 			getSupportFragmentManager()
@@ -78,6 +82,7 @@ public class GoingOnAppLogin_Activity extends FragmentActivity {
 			.add(android.R.id.content, fbLoginFragment)
 			.commit(); 
 		} else {
+			
 			fbLoginFragment = (FbLoginFragment) getSupportFragmentManager()
 					.findFragmentById(android.R.id.content);
 		}
@@ -251,7 +256,7 @@ public class GoingOnAppLogin_Activity extends FragmentActivity {
 	            	}
 	            	else{
 	            		pDialog.dismiss();
-	            		finishedAuth();
+	            		finishedAuthSystem();
 	            	}
 	            }
 	        }
@@ -259,31 +264,28 @@ public class GoingOnAppLogin_Activity extends FragmentActivity {
 	}
 	
 
-	/**
-	 * Starts the authentication process
-	 * @param mMail
-	 * @param mPass
-	 * @param typeLogin
-	 */
-	public void executeTaskFb(String mMail, String mUsername) {
-		mEmailFB = mMail;
-		mUserNameFB = mUsername;
-		//Se debe agregar los datos, si existe se hace un merge y si no se crea una nueva cuenta. 
-		//addUser();
-		finishedAuth();
-	}	
-
-
-	public void finishedAuth() {
+	public void finishedAuthSystem() {
 		Intent intent = new Intent(this, GoingOnAppMap_Activity.class);
-
-		intent.putExtra("userEmail", mEmail);
-		if (Session.getActiveSession()!=null){
-			intent.putExtra("fbUserId", fbUserId);
-		}
+		intent.putExtra("userEmail", mEmail);	
+		intent.putExtra("userType", 1);//System
 		startActivity(intent);
+		this.finish();
 	}
 
+	public void finishedAuthFacebook(String userMail, String userName) {
+		this.userMail = userMail;
+		this.userName = userName;
+		Intent intent = new Intent(this, GoingOnAppMap_Activity.class);
+		if (Session.getActiveSession()!=null){
+			intent.putExtra("fbUserId", fbUserId);
+			//intent.putExtra("userMail", this.userMail);
+			//intent.putExtra("userName", this.userName);
+			intent.putExtra("userType", 2);//Facebook
+		}	
+		startActivity(intent);
+		this.finish();
+		sessionFB = "close";
+	}
 	public void gotoSignIn(){
 		Intent intent = new Intent(this, GoingOnAppSignUp_Activity.class );
 

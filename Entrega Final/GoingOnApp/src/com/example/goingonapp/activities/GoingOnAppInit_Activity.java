@@ -25,7 +25,9 @@ public class GoingOnAppInit_Activity extends Activity {
 
 		new Timer().schedule(new TimerTask(){
 			public void run() { 
-				startActivity(new Intent(GoingOnAppInit_Activity.this, GoingOnAppLogin_Activity.class));
+				Intent intent = new Intent(GoingOnAppInit_Activity.this, GoingOnAppLogin_Activity.class);
+				intent.putExtra("sessionFb", "open");
+				startActivity(intent);
 				finish();
 			}
 		}, 1000); 
