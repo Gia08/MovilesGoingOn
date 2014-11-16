@@ -63,6 +63,18 @@
             android:name="com.example.goingonapp.activities.GoingOnAppAddEvent_Activity"
             android:label="@string/title_activity_going_on_app_add_event_" >
         </activity>
+        <activity
+            android:name="com.example.goingonapp.activities.GoingOnAppMobileUser_Activity"
+            android:label="@string/title_activity_going_on_app_mobile_user_" >
+        </activity>
+        <activity
+            android:name="com.example.goingonapp.activities.GoingOnAppEventList_Activity"
+            android:label="@string/title_activity_going_on_app_event_list_" >
+        </activity>
+        <activity
+            android:name="com.example.goingonapp.activities.GoingOnAppTicketsList_Activity"
+            android:label="@string/title_activity_going_on_app_tickets_list_" >
+        </activity>
     </application>
 
 </manifest>

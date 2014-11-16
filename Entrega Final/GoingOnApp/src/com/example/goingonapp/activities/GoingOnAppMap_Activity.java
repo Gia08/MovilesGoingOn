@@ -77,7 +77,9 @@ public class GoingOnAppMap_Activity extends Activity {
 	}
 	
 	public void updateEventList(){
-		
+		Intent intent = new Intent(this, GoingOnAppMobileUser_Activity.class);
+		intent.putExtra("userEmail", userEmail);
+		startActivity(intent);
 	}
 	
 	public void createEvent(){

@@ -38,7 +38,8 @@
     <string name="event_price">Event\'s price</string>
     <string name="event_location">Event\'s location</string>
     <string name="select_event_categorie">Select event categorie</string>
-     <string-array name="event_categories_array">
+
+    <string-array name="event_categories_array">
         <item>Concert</item>
         <item>Party</item>
         <item>Theater</item>
@@ -46,13 +47,13 @@
         <item>Business</item>
         <item>Art</item>
     </string-array>
-    <string name="select_event_initial_date">Select event\'s initial date:</string>     
-    <string name="select_event_final_date">Select event\'s final date:</string>    
-    <string name="select_event_initial_time">Select event\'s initial time:</string>    
+
+    <string name="select_event_initial_date">Select event\'s initial date:</string>
+    <string name="select_event_final_date">Select event\'s final date:</string>
+    <string name="select_event_initial_time">Select event\'s initial time:</string>
     <string name="select_event_final_time">Select event\'s final time:</string>
     <string name="error_event_not_valid">Event is not valid</string>
-    
-    
+
     <!-- Resources related with colors -->
     <color name="orange">#99F15a24</color>
     <color name="GO_light_gray">#999999</color>
@@ -74,5 +75,14 @@
     <string name="cancel">Cancel</string>
     <string name="log_out">Log out</string>
     <string name="title_activity_going_on_app_add_event_">GoingOnApp</string>
+
+    <!-- Resources for activity_going_on_app_profile_user_mobile Menu -->
+    <string name="user_name">User name</string>
+    <string name="user_description">Descriptive frase that the user wants to display</string>
+    <string name="user_events">Events</string>
+    <string name="user_tickets">Tickets</string>
+    <string name="title_activity_going_on_app_mobile_user_">GoingOnApp</string>
+    <string name="title_activity_going_on_app_event_list_">GoingOnApp</string>
+    <string name="title_activity_going_on_app_tickets_list_">GoingOnApp</string>
 
 </resources>
