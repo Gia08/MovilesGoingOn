@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.example.goingonapp.R;
 import com.example.goingonapp.objects.ContextEventsList;
-import com.example.goingonapp.objects.Event;
+import com.example.goingonapp.objects.CreateEvent;
 import com.example.goingonapp.objects.EventsAdapter;
 import com.example.goingonapp.objects.RegisterUser;
 
@@ -33,7 +33,6 @@ public class GoingOnAppMobileUser_Activity extends TabActivity {
 	 * Mobile User instance
 	 */	
 	private RegisterUser user;	
-	private ContextEventsList eventsUser = null;
 	
 	/**
 	 * Variables related to Mobile User
@@ -66,7 +65,7 @@ public class GoingOnAppMobileUser_Activity extends TabActivity {
         tabhost.addTab(tab2);
         
 		image = (ImageView) findViewById(R.id.imageView_picture_user);
-		Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_user_picture);
+		Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_contact_picture);
 		image.setImageBitmap(getRoundedShape(bm));
 		
 		userMail = getIntent().getExtras().getString("userEmail");

@@ -1,14 +1,25 @@
 package com.example.goingonapp.activities;
 
+import java.net.MalformedURLException;
 import java.util.List;
 
 import com.example.goingonapp.R;
 import com.example.goingonapp.R.layout;
 import com.example.goingonapp.R.menu;
+import com.example.goingonapp.objects.ContextEventsList;
+import com.example.goingonapp.objects.LoginUser;
+import com.example.goingonapp.objects.MapObject;
 import com.facebook.Session;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.microsoft.windowsazure.mobileservices.ApiJsonOperationCallback;
+import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,6 +27,7 @@ import android.content.pm.ResolveInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TabHost;
+import android.widget.Toast;
 import android.widget.TabHost.TabSpec;
 
 public class GoingOnAppMain_Activity extends TabActivity {
@@ -46,6 +58,7 @@ public class GoingOnAppMain_Activity extends TabActivity {
 		else{//Login with Facebook
 			userEmail = getIntent().getExtras().getString("fbUserId");
 		}
+		
 		
 		// create the TabHost that will contain the Tabs
         TabHost tabHost = (TabHost)findViewById(android.R.id.tabhost);
@@ -114,11 +127,13 @@ public class GoingOnAppMain_Activity extends TabActivity {
 		startActivity(intent);
 	}
 	
-	public void createEvent(){
+	public void createEvent(){		
 		Intent intent = new Intent(this, GoingOnAppAddEvent_Activity.class);
 		intent.putExtra("userEmail", userEmail);
 		startActivity(intent);
 	}
+	
+	
 	
 	public void LogOut(){
 		if (Session.getActiveSession() != null) {

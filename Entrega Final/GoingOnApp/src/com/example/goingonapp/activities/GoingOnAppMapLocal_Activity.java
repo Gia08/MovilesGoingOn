@@ -1,11 +1,13 @@
 package com.example.goingonapp.activities;
 
 import java.net.MalformedURLException;
+import java.util.HashMap;
 import java.util.List;
 
 import com.example.goingonapp.R;
+import com.example.goingonapp.fragments.EventMapFragment;
 import com.example.goingonapp.objects.ContextEventsList;
-import com.example.goingonapp.objects.Event;
+import com.example.goingonapp.objects.MapObject;
 import com.facebook.Session;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -48,11 +50,13 @@ public class GoingOnAppMapLocal_Activity extends Activity {
 	private ContextEventsList localMap;
 	private String userEmail;
 	private String userType;
+	private HashMap<Marker, MapObject> eventMarkerMap;
+	
 	
 	/**
 	 * UI References
 	 */
-	private GoogleMap map;
+	private EventMapFragment mapFragment;
 	private ProgressDialog pDialog;
 	
 	@Override
@@ -82,25 +86,62 @@ public class GoingOnAppMapLocal_Activity extends Activity {
 			userEmail = getIntent().getExtras().getString("userEmail");
 		}
 		
-		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.mapLocal))
-				.getMap();
-		map.setMyLocationEnabled(true);
+		mapFragment = new EventMapFragment();
+
+		android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+
+		 
+		ft.add(R.id.mapLocal, mapFragment);
+
+		ft.commit();
+		
+		
+	}
+	
+	@Override
+	 protected void onStart() {
+
+		  super.onStart();
+		  setUpMapVariables();
+		  updateLocalInfoSystem();
+
+	}
+	
+	private Location getMyLocation() {
+	    // Get location from GPS if it's available
+	    LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+	    Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+	    // Location wasn't found, check the next most accurate place for the current location
+	    if (myLocation == null) {
+	        Criteria criteria = new Criteria();
+	        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+	        // Finds a provider that matches the criteria
+	        String provider = lm.getBestProvider(criteria, true);
+	        // Use the provider to get the last known location
+	        myLocation = lm.getLastKnownLocation(provider);
+	    }
+
+	    return myLocation;
+	}
+	
+	private void setUpMapVariables(){		
 
 		localMap = new ContextEventsList();
 		
-		LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		Criteria criteria = new Criteria();
-
-		Location myLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-		if (myLocation != null)
-		{
-			centerMapOnMyLocation(myLocation); 
-		}
+		eventMarkerMap = new HashMap<Marker, MapObject>();
 		
-		map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+		mapFragment.getMap().setMyLocationEnabled(true);
+
+		Location location = getMyLocation();
+		centerMapOnMyLocation(location);
+		
+		mapFragment.getMap().setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
 			@Override
 			public void onInfoWindowClick(final Marker marker) {
 
+				final MapObject localInfo = eventMarkerMap.get(marker);
+				
 				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GoingOnAppMapLocal_Activity.this);
 
 				// set title
@@ -108,11 +149,12 @@ public class GoingOnAppMapLocal_Activity extends Activity {
 
 				// set dialog message
 				alertDialogBuilder
-				.setMessage(marker.getTitle()+ "\n" + marker.getSnippet()+ "\n\n" + "Go check local's info?")
+				.setMessage(marker.getTitle() + "\n" + marker.getSnippet() + "\n\n" + "Go check local's info?")
 				.setCancelable(false)
 				.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog,int id) {
-						//goToEventProfile(marker.getTitle());						
+						//goToLocalProfile(Integer.parseInt(localInfo.getmId()));
+						goToLocalProfile();
 					}
 
 				})
@@ -130,8 +172,6 @@ public class GoingOnAppMapLocal_Activity extends Activity {
 			}
 
 		});
-		
-		updateLocalInfoSystem();
 	}
 	
 
@@ -141,7 +181,7 @@ public class GoingOnAppMapLocal_Activity extends Activity {
 	 */
 	private void centerMapOnMyLocation(Location location) {
 
-		map.animateCamera(CameraUpdateFactory.newLatLngZoom(
+		mapFragment.getMap().animateCamera(CameraUpdateFactory.newLatLngZoom(
 				new LatLng(location.getLatitude(), location.getLongitude()), 13));
 
 		CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -150,7 +190,7 @@ public class GoingOnAppMapLocal_Activity extends Activity {
 		.bearing(90)                // Sets the orientation of the camera to east
 		.tilt(40)                   // Sets the tilt of the camera to 30 degrees
 		.build();                   // Creates a CameraPosition from the builder
-		map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+		mapFragment.getMap().animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
 	}
 
@@ -188,7 +228,7 @@ public class GoingOnAppMapLocal_Activity extends Activity {
 						String id = item.get("id").toString();
 						double latitude = Double.valueOf(item.get("latitude").toString());
 						double longitude = Double.valueOf(item.get("longitude").toString());
-						Event tempLocal = new Event(name, descr, id, latitude, longitude, idTypeEvent);
+						MapObject tempLocal = new MapObject(name, descr, id, latitude, longitude, idTypeEvent);
 						localMap.insertEvent(tempLocal);
 						updateUI();
     	        	} 	        		
@@ -201,11 +241,9 @@ public class GoingOnAppMapLocal_Activity extends Activity {
 	
 	private void updateUI() {
 		for (int i = 0; i<localMap.getListEvents().size();i++){
-			Event event = localMap.getListEvents().get(i);
-			map.addMarker(new MarkerOptions()
-			.position(new LatLng(event.getLatitude(), event.getLongitude()))
-			.title(event.getName())
-			.snippet(event.getDescription()));
+			MapObject event = localMap.getListEvents().get(i);
+			Marker newMarker = mapFragment.placeMarker(event);
+			eventMarkerMap.put(newMarker, event);
 		}		
 	}
 
@@ -218,7 +256,24 @@ public class GoingOnAppMapLocal_Activity extends Activity {
 	
 	@Override
 	public void onBackPressed() {
-
+		
+	}
+	
+	
+	public void goToLocalProfile(){
+		Intent intent = new Intent(this, GoingOnAppLocalProfile_Activity.class);
+		/**MapObject tempEvent = localMap.getEvent(Id);
+		if (tempEvent ==null){			
+			System.out.println("tempEvent is null ");
+			System.out.println("Size de list events es "+localMap.getListEvents().size());
+		}
+		else {
+			System.out.println("event title is " + tempEvent.getName());
+		}
+		**/		
+		intent.putExtra("userType", userType);
+		intent.putExtra("userMail", userEmail);
+		startActivity(intent); 
 	}
 	
 	

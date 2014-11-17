@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.example.goingonapp.R;
 import com.example.goingonapp.R.layout;
 import com.example.goingonapp.R.menu;
-import com.example.goingonapp.objects.Event;
+import com.example.goingonapp.objects.CreateEvent;
 import com.example.goingonapp.objects.EventsAdapter;
 
 import android.os.Bundle;
@@ -23,14 +23,14 @@ public class GoingOnAppEventList_Activity extends Activity {
 		ListView lista = (ListView) findViewById(R.id.listaeventos);
 	      
 		//ArrayList<CreateEvent> arraydir = (ArrayList<CreateEvent>)eventsUser.getListEvents();
-		ArrayList<Event> arraydir = new ArrayList<Event>();
+		ArrayList<CreateEvent> arraydir = new ArrayList<CreateEvent>();
 		//for (int i = 0; i<arraydir.size();i++){
 		for (int i = 0; i<7;i++){
 			//FIXME
 			//This should get the image
 			//arraydir.get(i).event_Image = getResources().getDrawable(R.drawable.ic_concierto);			
 			//Remove this, is for testing only:
-			Event newEvent = new Event("" + (100 + 1), "Titulo " +i, "descripcion " + i,
+			CreateEvent newEvent = new CreateEvent("" + (100 + 1), "Titulo " +i, "descripcion " + i,
 					"1000", "1000", "1000", "1000", 
 					"1000", 2, 
 					2, 2, 2, 2, "1000");

@@ -8,11 +8,11 @@ public class ContextEventsList implements Serializable {
 			
 		private static final long serialVersionUID = 1L;
 		//Attributes
-		private List<Event> listEvents;
+		private List<MapObject> listEvents;
 		
 		// Constructor
 		public ContextEventsList() {
-			listEvents = new ArrayList<Event>();
+			listEvents = new ArrayList<MapObject>();
 		}
 
 		//Getters and Setters
@@ -20,29 +20,29 @@ public class ContextEventsList implements Serializable {
 		/**
 		 * @return the listEvents
 		 */
-		public List<Event> getListEvents() {
+		public List<MapObject> getListEvents() {
 			return listEvents;
 		}
 
 		/**
 		 * @param listEvents the listEvents to set
 		 */
-		public void setListEvents(List<Event> listEvents) {
+		public void setListEvents(List<MapObject> listEvents) {
 			this.listEvents = listEvents;
 		}
 		
 		//Methods
 		
-		public Event getEvent(int idEvent) {
+		public MapObject getEvent(int idEvent) {
 			for(int i =0; i< this.listEvents.size(); i++){
-				if (Long.parseLong(this.listEvents.get(i).getmId()) == idEvent) {
+				if (Integer.parseInt(this.listEvents.get(i).getmId()) == idEvent) {
 					return this.listEvents.get(i);
 				}
 			}
 			return null;
 		}
 		
-		public Event getEvent(String eventName) {
+		public MapObject getEvent(String eventName) {
 			for(int i =0; i< this.listEvents.size(); i++){
 				if (this.listEvents.get(i).getName().equals(eventName)) {
 					return this.listEvents.get(i);
@@ -51,11 +51,11 @@ public class ContextEventsList implements Serializable {
 			return null;
 		}
 		
-		public void insertEvent(Event newEvent) {
+		public void insertEvent(MapObject newEvent) {
 			this.listEvents.add(newEvent);
 		}
 		
-		public void deleteEvent(Event event){
+		public void deleteEvent(MapObject event){
 			int idEvent = (int) Long.parseLong(event.getmId());
 			for(int i =0; i< this.listEvents.size(); i++){
 				if (Long.parseLong(this.listEvents.get(i).getmId()) == idEvent) {

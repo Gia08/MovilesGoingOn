@@ -88,5 +88,12 @@
     <string name="title_activity_going_on_app_map_local_">GoingOnApp</string>
     <string name="title_activity_going_on_app_main_">GoingOnApp</string>
     <string name="title_activity_going_on_app_search_">GoingOnAppSearch_Activity</string>
+    <string name="title_activity_going_on_app_local_profile_">GoingOnApp</string>
 
+    <!-- Resources for activity_going_on_app_event_profile -->
+    <string name="event_category">Event\'s Category</string>    
+    <string name="event_date">Event\'s Date</string>
+    <string name="event_time">Event\'s Time</string>
+    <string name="go_waze">Get Direction</string>
+    
 </resources>

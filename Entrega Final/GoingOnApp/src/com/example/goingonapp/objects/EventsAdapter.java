@@ -15,9 +15,9 @@ import android.widget.TextView;
 public class EventsAdapter extends BaseAdapter {
 
 	protected Activity activity;
-    protected ArrayList<Event> items;
+    protected ArrayList<CreateEvent> items;
     
-    public EventsAdapter(Activity activity, ArrayList<Event> items) {
+    public EventsAdapter(Activity activity, ArrayList<CreateEvent> items) {
 	    this.activity = activity;
 	    this.items = items;
 	  }
@@ -49,7 +49,7 @@ public class EventsAdapter extends BaseAdapter {
 				}
 
 				// Create an event object
-				Event ev = items.get(position);
+				CreateEvent ev = items.get(position);
 				//Load the Image
 				//FIXME 
 				//ImageView event_image = (ImageView) v.findViewById(R.id.event_image);

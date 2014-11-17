@@ -4,6 +4,7 @@ package com.example.goingonapp.activities;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -17,10 +18,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.example.goingonapp.R;
+import com.example.goingonapp.fragments.EventMapFragment;
 import com.example.goingonapp.objects.ContextEventsList;
-import com.example.goingonapp.objects.Event;
+import com.example.goingonapp.objects.GPSTracker;
 import com.example.goingonapp.objects.LoginUserResult;
 import com.example.goingonapp.objects.MapEventListResult;
+import com.example.goingonapp.objects.MapObject;
 import com.facebook.Session;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -53,6 +56,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,18 +65,20 @@ import android.widget.Toast;
 public class GoingOnAppMapEvent_Activity extends Activity {
 
 	/**
-	 * Variables related to Main Activity
+	 * Variables related to Event Map Activity
 	 */
 	private String userEmail;
 	private String userType;
 	private MobileServiceClient mClient;
 	private ContextEventsList eventsMap;
 	private getEventsID asyncEvents = null;
+	private HashMap<Marker, MapObject> eventMarkerMap;
+
 	
 	/**
 	 * UI References
 	 */
-	private GoogleMap map;
+	private EventMapFragment mapFragment;
 	private ProgressDialog pDialog;
 	
 	@Override
@@ -88,6 +94,7 @@ public class GoingOnAppMapEvent_Activity extends Activity {
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
         pDialog.show();
+        
 		if (userType == null){
 			userType = "2";
 		}
@@ -101,25 +108,49 @@ public class GoingOnAppMapEvent_Activity extends Activity {
 			userEmail = getIntent().getExtras().getString("fbUserId");
 		}
 				
-		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
-				.getMap();
-		map.setMyLocationEnabled(true);
+		mapFragment = new EventMapFragment();
 
+		 android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+
+		 
+		 ft.add(R.id.map, mapFragment);
+
+		 ft.commit();
+		 
+		
+		
+	}
+	
+
+	@Override
+	 protected void onStart() {
+
+		  super.onStart();
+		  setUpMapVariables();
+		  if (userType == "2"){
+				updateEventsInfoFacebook();
+	      }
+		  updateEventsInfoSystem();
+
+	}
+
+	private void setUpMapVariables(){
 		eventsMap = new ContextEventsList();
 		
-		LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		Criteria criteria = new Criteria();
-
-		Location myLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-		if (myLocation != null)
-		{
-			centerMapOnMyLocation(myLocation); 
-		}
+		eventMarkerMap = new HashMap<Marker, MapObject>();
 		
-		map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+		
+		
+		mapFragment.getMap().setMyLocationEnabled(true);
+		mapFragment.getMap().getUiSettings().setMyLocationButtonEnabled(true);
+		centerMapOnMyLocation();
+				 			
+		mapFragment.getMap().setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
 			@Override
 			public void onInfoWindowClick(final Marker marker) {
-
+				
+				final MapObject eventInfo = eventMarkerMap.get(marker);
+				 
 				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GoingOnAppMapEvent_Activity.this);
 
 				// set title
@@ -127,11 +158,11 @@ public class GoingOnAppMapEvent_Activity extends Activity {
 
 				// set dialog message
 				alertDialogBuilder
-				.setMessage(marker.getTitle()+ "\n" + marker.getSnippet()+ "\n\n" + "Go check event's info?")
+				.setMessage(eventInfo.getName()+ "\n" + eventInfo.getDescription()+"\n\n" + "Go check event's info?")
 				.setCancelable(false)
 				.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog,int id) {
-						//goToEventProfile(marker.getTitle());						
+						goToEventProfile(Integer.parseInt((eventInfo.getmId())));						
 					}
 
 				})
@@ -149,29 +180,32 @@ public class GoingOnAppMapEvent_Activity extends Activity {
 			}
 
 		});
-		if (userType == "2"){
-			updateEventsInfoFacebook();
-		}	
-		updateEventsInfoSystem();
+			
 	}
 	
-
 	/**
 	 * Map function: Zooming camera to user position
 	 * @param location
 	 */
-	private void centerMapOnMyLocation(Location location) {
+	private void centerMapOnMyLocation() {
+		GPSTracker gps = new GPSTracker(this);
+		
+		if(gps.canGetLocation()){ 
+			mapFragment.getMap().animateCamera(CameraUpdateFactory.newLatLngZoom(
+					new LatLng(gps.getLatitude(), gps.getLongitude()), 13));
 
-		map.animateCamera(CameraUpdateFactory.newLatLngZoom(
-				new LatLng(location.getLatitude(), location.getLongitude()), 13));
-
-		CameraPosition cameraPosition = new CameraPosition.Builder()
-		.target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
-		.zoom(17)                   // Sets the zoom
-		.bearing(90)                // Sets the orientation of the camera to east
-		.tilt(40)                   // Sets the tilt of the camera to 30 degrees
-		.build();                   // Creates a CameraPosition from the builder
-		map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+			CameraPosition cameraPosition = new CameraPosition.Builder()
+			.target(new LatLng(gps.getLatitude(), gps.getLongitude()))      // Sets the center of the map to location user
+			.zoom(17)                   // Sets the zoom
+			.bearing(90)                // Sets the orientation of the camera to east
+			.tilt(40)                   // Sets the tilt of the camera to 30 degrees
+			.build();                   // Creates a CameraPosition from the builder
+			mapFragment.getMap().animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            
+		}else{
+            gps.showSettingsAlert();
+        } 	
+		
 
 	}
 		
@@ -214,6 +248,7 @@ public class GoingOnAppMapEvent_Activity extends Activity {
 					String name = "";
 					double latitude = 0.00;
 					double longitude = 0.00;
+					String startTime = "";
 					String id = "";
 					for ( int i = 0; i < ( JAEvents.length() ); i++ )
 					{
@@ -229,7 +264,9 @@ public class GoingOnAppMapEvent_Activity extends Activity {
 									name = json_obj.getString("name");}
 								if(json_obj.has("id")){
 									id = json_obj.getString("id");}
-								Event tempEvent = new Event(name, description, id, latitude, longitude, 13);//idTypeEvent = 13, Facebook Event
+								if(json_obj.has("startTime")){
+									startTime = json_obj.getString("startTime");}
+								MapObject tempEvent = new MapObject(name, description, id, latitude, longitude, 13, startTime);//idTypeEvent = 13, Facebook Event
 								eventsMap.insertEvent(tempEvent);															
 							}
 							else {
@@ -276,11 +313,14 @@ public class GoingOnAppMapEvent_Activity extends Activity {
 		        		
 		        		String name = item.get("name").toString();
 						String descr = item.get("description").toString();
+						String eventPrice = item.get("eventPrice").toString();
+						String startDate = item.get("startDate").toString();
+						String startTime = item.get("startTime").toString();
 						int idTypeEvent = Integer.valueOf(item.get("idTypeEvent").toString());
 						String id = item.get("id").toString();
 						double latitude = Double.valueOf(item.get("latitude").toString());
 						double longitude = Double.valueOf(item.get("longitude").toString());
-						Event tempEvent = new Event(name, descr, id, latitude, longitude, idTypeEvent);
+						MapObject tempEvent = new MapObject(name, descr, id, latitude, longitude, idTypeEvent, eventPrice, startDate, startTime);
 						eventsMap.insertEvent(tempEvent);
 						updateUI();
     	        	} 	        		
@@ -293,11 +333,9 @@ public class GoingOnAppMapEvent_Activity extends Activity {
 	
 	private void updateUI() {
 		for (int i = 0; i<eventsMap.getListEvents().size();i++){
-			Event event = eventsMap.getListEvents().get(i);
-			map.addMarker(new MarkerOptions()
-			.position(new LatLng(event.getLatitude(), event.getLongitude()))
-			.title(event.getName())
-			.snippet(event.getDescription()));
+			MapObject event = eventsMap.getListEvents().get(i);
+			Marker newMarker = mapFragment.placeMarker(event);
+			eventMarkerMap.put(newMarker, event);
 		}		
 	}
 
@@ -311,6 +349,24 @@ public class GoingOnAppMapEvent_Activity extends Activity {
 	@Override
 	public void onBackPressed() {
 
+	}
+	
+	public void goToEventProfile(int Id){
+		Intent intent = new Intent(this, GoingOnAppEventProfile_Activity.class);
+		MapObject tempEvent = eventsMap.getEvent(Id);
+		if (tempEvent ==null){			
+			System.out.println("tempEvent is null ");
+			System.out.println("Size de list events es "+eventsMap.getListEvents().size());
+		}
+		else {
+			System.out.println("event title is " + tempEvent.getName());
+		}
+		
+		intent.putExtra("eventInfo", tempEvent);
+		intent.putExtra("userType", userType);
+		intent.putExtra("userMail", userEmail);
+		startActivity(intent); 
+		this.finish();
 	}
 	
 	

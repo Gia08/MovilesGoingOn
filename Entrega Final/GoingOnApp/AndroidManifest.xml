@@ -100,6 +100,10 @@
             android:name="com.example.goingonapp.activities.GoingOnAppSearch_Activity"
             android:label="@string/title_activity_going_on_app_search_" >
         </activity>
+        <activity
+            android:name="com.example.goingonapp.activities.GoingOnAppLocalProfile_Activity"
+            android:label="@string/title_activity_going_on_app_local_profile_" >
+        </activity>
     </application>
 
 </manifest>

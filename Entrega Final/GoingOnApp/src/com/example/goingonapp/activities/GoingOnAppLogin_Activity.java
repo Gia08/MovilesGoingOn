@@ -53,7 +53,6 @@ public class GoingOnAppLogin_Activity extends FragmentActivity {
 	private String mEmail;
 	private String mPassword;
 	private MobileServiceClient mClient;
-	private ProgressBar mProgressBar;
 	
 	
 	/**
@@ -72,9 +71,7 @@ public class GoingOnAppLogin_Activity extends FragmentActivity {
 		
      	requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_going_on_app_login);
-		
-	    sessionFB = "cerrar";
-		
+				
 		if (savedInstanceState == null) {
 			fbLoginFragment = new FbLoginFragment();
 			getSupportFragmentManager()
@@ -87,12 +84,19 @@ public class GoingOnAppLogin_Activity extends FragmentActivity {
 					.findFragmentById(android.R.id.content);
 		}
 		
+		pDialog = new ProgressDialog(GoingOnAppLogin_Activity.this);
+		
+		if (Session.getActiveSession()!=null){
+			
+	        pDialog.setMessage("Logging with Facebook....");
+	        pDialog.setIndeterminate(false);
+	        pDialog.setCancelable(false);
+	        pDialog.show();
+		}
+		
 		/**
 		 * Set up the Login Form
 		 */
-		
-		mProgressBar = (ProgressBar)findViewById(R.id.progressBar1);
-     	mProgressBar.setVisibility(View.GONE);
      	
 		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
 		mEmailView = (EditText) findViewById(R.id.email);
@@ -222,7 +226,7 @@ public class GoingOnAppLogin_Activity extends FragmentActivity {
 			// Show a progress spinner, and kick off a background task to
 			// perform the user login attempt.
 			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
-			pDialog = new ProgressDialog(GoingOnAppLogin_Activity.this);
+			//pDialog = new ProgressDialog(GoingOnAppLogin_Activity.this);
 	        pDialog.setMessage("Logging....");
 	        pDialog.setIndeterminate(false);
 	        pDialog.setCancelable(false);
@@ -273,6 +277,7 @@ public class GoingOnAppLogin_Activity extends FragmentActivity {
 	}
 
 	public void finishedAuthFacebook(String userMail, String userName) {
+		pDialog.dismiss();
 		this.userMail = userMail;
 		this.userName = userName;
 		Intent intent = new Intent(this, GoingOnAppMain_Activity.class);
@@ -282,9 +287,8 @@ public class GoingOnAppLogin_Activity extends FragmentActivity {
 			//intent.putExtra("userName", this.userName);
 			intent.putExtra("userType", 2);//Facebook
 		}	
-		startActivity(intent);
+		startActivity(intent);		
 		this.finish();
-		sessionFB = "close";
 	}
 	public void gotoSignIn(){
 		Intent intent = new Intent(this, GoingOnAppSignUp_Activity.class );

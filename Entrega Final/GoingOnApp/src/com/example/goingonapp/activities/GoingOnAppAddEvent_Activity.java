@@ -16,7 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.example.goingonapp.R;
-import com.example.goingonapp.objects.Event;
+import com.example.goingonapp.objects.CreateEvent;
 import com.example.goingonapp.objects.CreateEventResult;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
@@ -275,7 +275,7 @@ public class GoingOnAppAddEvent_Activity extends Activity {
 	public void createEvent(String eventName,String eventDescr, String eventPrice, String eventCategory,
 			String initDate, String endDate, String initTime, String endTime ){
 		
-		Event newEvent = new Event();
+		CreateEvent newEvent = new CreateEvent();
 		
 		newEvent.name = eventName;
 		newEvent.description = eventDescr;
