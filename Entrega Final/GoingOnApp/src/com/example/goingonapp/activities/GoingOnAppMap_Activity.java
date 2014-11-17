@@ -4,14 +4,21 @@ package com.example.goingonapp.activities;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.example.goingonapp.R;
 import com.example.goingonapp.objects.ContextEventsList;
+import com.example.goingonapp.objects.Event;
 import com.example.goingonapp.objects.LoginUserResult;
 import com.example.goingonapp.objects.MapEventListResult;
 import com.facebook.Session;
@@ -22,6 +29,7 @@ import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -35,6 +43,7 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -57,6 +66,8 @@ public class GoingOnAppMap_Activity extends Activity {
 	private String userEmail;
 	private String userType;
 	private MobileServiceClient mClient;
+	private ContextEventsList eventsMap;
+	private getEventsID asyncEvents = null;
 	
 	/**
 	 * UI References
@@ -94,6 +105,8 @@ public class GoingOnAppMap_Activity extends Activity {
 				.getMap();
 		map.setMyLocationEnabled(true);
 
+		eventsMap = new ContextEventsList();
+		
 		LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		Criteria criteria = new Criteria();
 
@@ -136,8 +149,10 @@ public class GoingOnAppMap_Activity extends Activity {
 			}
 
 		});
-
-		updateEventsInfo();
+		if (userType == "2"){
+			updateEventsInfoFacebook();
+		}	
+		updateEventsInfoSystem();
 	}
 	
 
@@ -159,8 +174,13 @@ public class GoingOnAppMap_Activity extends Activity {
 		map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
 	}
-			
-	public void updateEventsInfo() {
+		
+	public void updateEventsInfoFacebook(){
+		asyncEvents = new getEventsID();
+		asyncEvents.execute();
+	}
+	
+	public void updateEventsInfoSystem() {
 		try {
 			mClient = new MobileServiceClient(
 					"https://goingon.azure-mobile.net/",
@@ -172,24 +192,117 @@ public class GoingOnAppMap_Activity extends Activity {
 		}
 	}
 	
+	/**
+	 * Function in charge of get all events from Facebook User
+	 */
+	public class getEventsID extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			Session session = Session.getActiveSession();
+			String URL = "https://graph.facebook.com/v2.2/"+userEmail+
+					"/events?access_token="+session.getAccessToken()+"&fields=id,name,location,description,venue";
+			try {
+				HttpClient hc = new DefaultHttpClient();
+				HttpGet getURL = new HttpGet(URL);
+				HttpResponse rp = hc.execute(getURL);
+				if (rp.getStatusLine() != null) {
+					String queryAlbums = EntityUtils.toString(rp.getEntity());
+					JSONObject JOTemp = new JSONObject(queryAlbums);
+					JSONArray JAEvents = JOTemp.getJSONArray("data"); 
+					String description = "";
+					String name = "";
+					double latitude = 0.00;
+					double longitude = 0.00;
+					String id = "";
+					Log.d("GoingOn", "Recibido: " + JOTemp);
+					Log.d("GoingOn", "Length: " + JAEvents.length());
+					Log.d("GoingOn", "Item: " + JAEvents.getJSONObject(0));
+					for ( int i = 0; i < ( JAEvents.length() ); i++ )
+					{
+						JSONObject json_obj = JAEvents.getJSONObject(i);
+						if(json_obj.has("venue")){
+							JSONObject venue = json_obj.getJSONObject("venue");
+							if(venue.has("latitude") && venue.has("longitude")){
+								latitude = Double.valueOf(venue.getString("latitude"));
+								longitude = Double.valueOf(venue.getString("longitude"));
+								if(json_obj.has("description")){
+									description = json_obj.getString("description");}
+								if(json_obj.has("name")){
+									name = json_obj.getString("name");}
+								if(json_obj.has("id")){
+									id = json_obj.getString("id");}
+								Event tempEvent = new Event(name, description, id, latitude, longitude, 2);
+								eventsMap.insertEvent(tempEvent);															
+							}
+							else {
+								
+							}
+						}	
+					}			
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				Log.d("GoingOn", "Error: "+ e);
+			}
+
+			return null;
+		}
+		
+
+		@Override
+		protected void onPostExecute(Void result) {
+			asyncEvents = null;
+		}
+
+		@Override
+		protected void onCancelled() {
+			asyncEvents = null;
+		}
+	}
+	
 	public void processEventList(){
 		
 		mClient.invokeApi("geteventinfomarket",null, "GET", null, new ApiJsonOperationCallback() {
 	        @Override
-	        public void onCompleted(JsonElement jsonElement, Exception e, ServiceFilterResponse serviceFilterResponse) {
-	        	JsonArray json_event_list = jsonElement.getAsJsonArray();
-	        	for(int i = 0; i < json_event_list.size(); i++)
-	        	{
-	        		Log.d("GoingOn", "Item: "+json_event_list.get(i)+"\n");
-	        		JsonObject item = json_event_list.get(i).getAsJsonObject();
-	        		Log.d("GoingOn", item.get("name").toString());
-	        	    // do some stuff....
-	        	}
-	        	//Log.d("GoingOn", "JsonElement: "+ jsonElement.getAsJsonObject());
-	        	pDialog.dismiss();	            
+	        public void onCompleted(JsonElement jsonElement, Exception error, ServiceFilterResponse serviceFilterResponse) {
+	        	JsonArray json_event_list = jsonElement.getAsJsonArray();	        	
+        		if (error != null){
+        			pDialog.dismiss();
+	            	Toast.makeText(getApplicationContext(), "Error: " + error , Toast.LENGTH_LONG).show();
+        		}
+        		else{
+        			pDialog.dismiss();	   
+        			for(int i = 0; i < json_event_list.size(); i++)
+    	        	{
+	        			Log.d("GoingOn", "Item: "+json_event_list.get(i)+"\n");
+		        		JsonObject item = json_event_list.get(i).getAsJsonObject();
+		        		
+		        		String name = item.get("name").toString();
+						String descr = item.get("description").toString();
+						int idTypeEvent = Integer.valueOf(item.get("idTypeEvent").toString());
+						String id = item.get("id").toString();
+						double latitude = Double.valueOf(item.get("latitude").toString());
+						double longitude = Double.valueOf(item.get("longitude").toString());
+						Event tempEvent = new Event(name, descr, id, latitude, longitude, idTypeEvent);
+						eventsMap.insertEvent(tempEvent);
+						updateUI();
+    	        	} 	        		
+        		}
+	        	         
 	        }
 	    });	
 		
+	}
+	
+	private void updateUI() {
+		for (int i = 0; i<eventsMap.getListEvents().size();i++){
+			Event event = eventsMap.getListEvents().get(i);
+			map.addMarker(new MarkerOptions()
+			.position(new LatLng(event.getLatitude(), event.getLongitude()))
+			.title(event.getName())
+			.snippet(event.getDescription()));
+		}		
 	}
 
 	@Override

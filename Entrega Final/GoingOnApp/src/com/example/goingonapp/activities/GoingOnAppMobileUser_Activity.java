@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.example.goingonapp.R;
 import com.example.goingonapp.objects.ContextEventsList;
-import com.example.goingonapp.objects.CreateEvent;
+import com.example.goingonapp.objects.Event;
 import com.example.goingonapp.objects.EventsAdapter;
 import com.example.goingonapp.objects.RegisterUser;
 
