@@ -84,5 +84,9 @@
     <string name="title_activity_going_on_app_mobile_user_">GoingOnApp</string>
     <string name="title_activity_going_on_app_event_list_">GoingOnApp</string>
     <string name="title_activity_going_on_app_tickets_list_">GoingOnApp</string>
+    <string name="title_activity_going_on_app_event_profile_">GoingOnApp</string>
+    <string name="title_activity_going_on_app_map_local_">GoingOnApp</string>
+    <string name="title_activity_going_on_app_main_">GoingOnApp</string>
+    <string name="title_activity_going_on_app_search_">GoingOnAppSearch_Activity</string>
 
 </resources>

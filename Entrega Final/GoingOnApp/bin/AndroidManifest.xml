@@ -14,7 +14,7 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-	
+
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
@@ -34,6 +34,7 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyDZ6z-_KR9_yDyPbeFZCGk8GG3SbTdKNYc" />
+
         <activity
             android:name="com.example.goingonapp.activities.GoingOnAppInit_Activity"
             android:label="@string/app_name" >
@@ -58,18 +59,18 @@
         <activity android:name="com.facebook.LoginActivity" >
         </activity>
         <activity
-            android:name="com.example.goingonapp.activities.GoingOnAppMap_Activity"
+            android:name="com.example.goingonapp.activities.GoingOnAppMapEvent_Activity"
             android:label="@string/title_activity_going_on_app_map_" >
         </activity>
         <activity
             android:name="com.example.goingonapp.activities.GoingOnAppSignUp_Activity"
-            android:label="@string/title_activity_going_on_app_sign_up_" 
+            android:label="@string/title_activity_going_on_app_sign_up_"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
             android:name="com.example.goingonapp.activities.GoingOnAppAddEvent_Activity"
             android:label="@string/title_activity_going_on_app_add_event_"
-            android:windowSoftInputMode="stateHidden"  >
+            android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
             android:name="com.example.goingonapp.activities.GoingOnAppMobileUser_Activity"
@@ -82,6 +83,22 @@
         <activity
             android:name="com.example.goingonapp.activities.GoingOnAppTicketsList_Activity"
             android:label="@string/title_activity_going_on_app_tickets_list_" >
+        </activity>
+        <activity
+            android:name="com.example.goingonapp.activities.GoingOnAppEventProfile_Activity"
+            android:label="@string/title_activity_going_on_app_event_profile_" >
+        </activity>
+        <activity
+            android:name="com.example.goingonapp.activities.GoingOnAppMapLocal_Activity"
+            android:label="@string/title_activity_going_on_app_map_local_" >
+        </activity>
+        <activity
+            android:name="com.example.goingonapp.activities.GoingOnAppMain_Activity"
+            android:label="@string/title_activity_going_on_app_main_" >
+        </activity>
+        <activity
+            android:name="com.example.goingonapp.activities.GoingOnAppSearch_Activity"
+            android:label="@string/title_activity_going_on_app_search_" >
         </activity>
     </application>
 

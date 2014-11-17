@@ -313,7 +313,7 @@ public class GoingOnAppAddEvent_Activity extends Activity {
 	}
 
 	public void finishedAuth() {
-		Intent intent = new Intent(this, GoingOnAppMap_Activity.class);
+		Intent intent = new Intent(this, GoingOnAppMapEvent_Activity.class);
 		intent.putExtra("userEmail", mUserMail);
 		intent.putExtra("fbEventsInfo", getIntent().getExtras().getString("fbEventsInfo"));
 		// Verify it resolves

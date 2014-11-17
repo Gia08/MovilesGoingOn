@@ -265,7 +265,7 @@ public class GoingOnAppLogin_Activity extends FragmentActivity {
 	
 
 	public void finishedAuthSystem() {
-		Intent intent = new Intent(this, GoingOnAppMap_Activity.class);
+		Intent intent = new Intent(this, GoingOnAppMain_Activity.class);
 		intent.putExtra("userEmail", mEmail);	
 		intent.putExtra("userType", 1);//System
 		startActivity(intent);
@@ -275,7 +275,7 @@ public class GoingOnAppLogin_Activity extends FragmentActivity {
 	public void finishedAuthFacebook(String userMail, String userName) {
 		this.userMail = userMail;
 		this.userName = userName;
-		Intent intent = new Intent(this, GoingOnAppMap_Activity.class);
+		Intent intent = new Intent(this, GoingOnAppMain_Activity.class);
 		if (Session.getActiveSession()!=null){
 			intent.putExtra("fbUserId", fbUserId);
 			//intent.putExtra("userMail", this.userMail);
