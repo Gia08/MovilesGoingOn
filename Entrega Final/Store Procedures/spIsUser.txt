@@ -1,0 +1,29 @@
+/*
+*
+* Parameters
+*
+* @Username: nvarchar 50
+* @Password: nvarchar 50
+* @idClassUser: int
+*
+*/
+
+DECLARE @TransactionName varchar(20) = 'spIsUser ';
+BEGIN TRANSACTION @TransactionName
+
+begin try
+DECLARE @count int, @result int
+SELECT @count = count(*)  FROM GoingOn.Users WHERE @Username = Username AND @Password = Password AND active = 1 AND @idClassUser = idClassUser
+
+/* si es menor que 0, NO se da el login*/
+IF @count < 1
+SELECT @result = 0
+ELSE
+SELECT @result = 1
+SELECT @result as result
+COMMIT  TRANSACTION @TransactionName
+end try
+
+begin catch
+ROLLBACK TRANSACTION @TransactionName
+end catch

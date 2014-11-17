@@ -1,13 +1,32 @@
 package com.example.goingonapp.activities;
 
+import java.net.MalformedURLException;
+import java.util.Dictionary;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import com.example.goingonapp.R;
 import com.example.goingonapp.R.layout;
 import com.example.goingonapp.R.menu;
 import com.example.goingonapp.objects.ContextEventsList;
+import com.example.goingonapp.objects.GetAllUserEventsResult;
+import com.example.goingonapp.objects.LoginUser;
+import com.example.goingonapp.objects.LoginUserResult;
 import com.example.goingonapp.objects.RegisterUser;
+import com.facebook.HttpMethod;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.microsoft.windowsazure.mobileservices.ApiJsonOperationCallback;
+import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
+import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,11 +35,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.TabHost.TabSpec;
 
 public class GoingOnAppLocalProfile_Activity extends TabActivity {
@@ -35,12 +57,15 @@ public class GoingOnAppLocalProfile_Activity extends TabActivity {
 	 */
 	private String userEmail;
 	private String userType;
+	private MobileServiceClient mClient;
+	private String idUser;
 	
 	/**
 	 * UI References
 	 */
 	private TabHost tabhost;
 	private ImageView image;
+	private ProgressDialog pDialog;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,13 +92,19 @@ public class GoingOnAppLocalProfile_Activity extends TabActivity {
 		
 		userType = getIntent().getExtras().getString("userType");
 		userEmail = getIntent().getExtras().getString("userEmail");
-		
+		idUser = getIntent().getExtras().getString("idUser");
 		//eventsUser = (ContextEventsList) getIntent().getSerializableExtra("eventsInfo");
 		
 		user = new RegisterUser(userEmail);
 		
 		
-        setTabColor(tabhost);    
+        setTabColor(tabhost);  
+        //pDialog = new ProgressDialog(GoingOnAppLocalProfile_Activity.this);
+        //pDialog.setMessage("Loading Info....");
+        //pDialog.setIndeterminate(false);
+        //pDialog.setCancelable(false);
+        //pDialog.show();
+        //getEventList();
 	}
 
 	@Override
@@ -150,8 +181,41 @@ public class GoingOnAppLocalProfile_Activity extends TabActivity {
 		 		i.setImageBitmap(user.getImage());*/
 
 		    }
-		});
+		});		
+	}
+	
+	public void getEventList(){
+		try {
+			mClient = new MobileServiceClient(
+					"https://goingon.azure-mobile.net/",
+					"NFAMhPBZapIrxYSYOgMIYSTZpTSaAJ18",
+					this);
+			processEventList();
+		} catch (MalformedURLException e) {
+			Toast.makeText(getApplicationContext(), "There was an error creating the Mobile Service. Verify the URL" , Toast.LENGTH_LONG).show(); 
+		}
+	}
+	
+	public void processEventList(){
+				
+		LoginUser login = new LoginUser();
+		login.Password = "";
+		login.Username = "33";
+		login.idClassUser = 0;
 		
+		mClient.invokeApi("getalluserevents",login, JsonElement.class, new ApiOperationCallback<JsonElement>() {
+	        @Override
+	        public void onCompleted(JsonElement getAllUserEventsResult, Exception error, ServiceFilterResponse response) {
+	            if (error != null) {
+	            	//pDialog.dismiss();
+	            	Toast.makeText(getApplicationContext(), "Error: " + error , Toast.LENGTH_LONG).show();
+	            } else {
+	            	//pDialog.dismiss();
+	            	Log.d("GoingOn", "Se recibio: "+ getAllUserEventsResult.toString());
+	            }
+	        }
+	    });
+	
 	}
 
 }

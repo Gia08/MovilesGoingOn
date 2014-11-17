@@ -1,0 +1,17 @@
+exports.post = function(request, response) {
+    var mssql = request.service.mssql;
+    var sql = "exec GoingOn.addEvent ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
+    mssql.query(sql, [request.body.name, request.body.description, request.body.startDate, 
+    request.body.endDate, request.body.startTime, request.body.endTime, request.body.eventPrice, 
+    request.body.idTypeEvent, request.body.idTypePrivacyEvent, request.body.idTypeStateEvent,
+    request.body.latitude, request.body.longitude,  request.body.Username], {
+        success: function(results) {                                     
+            if(results.length == 1)                         
+                response.send(200, results[0]);       
+        }
+    })
+};
+
+exports.get = function(request, response) {
+    
+};

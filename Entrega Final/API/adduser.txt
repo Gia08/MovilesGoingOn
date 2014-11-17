@@ -1,0 +1,15 @@
+exports.post = function(request, response) {
+   
+    var mssql = request.service.mssql;
+    var sql = "exec GoingOn.addUser ?, ?, ?, ?, ?, ?, ?, ?, ?";
+    mssql.query(sql, [request.body.name, request.body.password, request.body.userName, request.body.idClassUser, request.body.idTypeUser, request.body.idTypeUserLocal, request.body.description, request.body.latitude, request.body.longitude], {
+        success: function(results) {                                     
+            if(results.length == 1)                         
+                response.send(200, results[0]);       
+        }
+    })
+};
+
+exports.get = function(request, response) {
+    
+};

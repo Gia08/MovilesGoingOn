@@ -1,0 +1,22 @@
+/**
+*Parameters
+*
+* @Username: nvarchar 50
+* @idClassUser: int
+* @count: int (output)
+*
+**/
+
+DECLARE @TransactionName varchar(20) = 'spCountUser';
+BEGIN TRANSACTION @TransactionName
+
+begin try
+
+SELECT @count = count(*) FROM GoingOn.Users WHERE @Username = Username AND @idClassUser = idClassUser
+COMMIT  TRANSACTION @TransactionName
+
+end try
+begin catch
+
+ROLLBACK TRANSACTION @TransactionName
+end catch

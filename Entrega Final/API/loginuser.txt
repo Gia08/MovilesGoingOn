@@ -1,0 +1,14 @@
+exports.post = function(request, response) {
+    var mssql = request.service.mssql;
+    var sql = "exec GoingOn.spIsUser ?, ?, ?";
+    mssql.query(sql, [request.body.Username, request.body.Password, request.body.idClassUser], {
+        success: function(results) {                                     
+            if(results.length == 1)                         
+                response.send(200, results[0]);      
+        }
+    })
+};
+
+exports.get = function(request, response) {
+    response.send(statusCodes.OK, { message : 'Hello World!' });
+};

@@ -262,19 +262,13 @@ public class GoingOnAppMapLocal_Activity extends Activity {
 	
 	public void goToLocalProfile(){
 		Intent intent = new Intent(this, GoingOnAppLocalProfile_Activity.class);
-		/**MapObject tempEvent = localMap.getEvent(Id);
-		if (tempEvent ==null){			
-			System.out.println("tempEvent is null ");
-			System.out.println("Size de list events es "+localMap.getListEvents().size());
-		}
-		else {
-			System.out.println("event title is " + tempEvent.getName());
-		}
-		**/		
-		intent.putExtra("userType", userType);
-		intent.putExtra("userMail", userEmail);
-		startActivity(intent); 
+		//MapObject tempEvent = localMap.getEvent(Id);
+		//if (tempEvent != null){		
+			intent.putExtra("idUser", 1);
+			intent.putExtra("userType", userType);
+			intent.putExtra("userMail", userEmail);
+			startActivity(intent); 
+		//}		
 	}
-	
 	
 }

@@ -1,0 +1,25 @@
+/*
+*
+* Parameters
+*
+* @name: nvarchar 50
+* @firstName: nvarchar 50
+* @lastName: nvarchar 50 	
+* @email: nvarchar 50
+* @idAddress: int
+* @id: int (output)
+
+*/
+
+DECLARE @TransactionName varchar(20) = 'spSetPerson';
+BEGIN TRANSACTION @TransactionName
+
+begin try
+SELECT @id =  coalesce(MAX(id), 0)+1 FROM GoingOn.People
+INSERT GoingOn.People(name,firstName,lastName,idAddress,email) VALUES (@name, @firstName, @lastName, @idAddress, @email)
+COMMIT TRANSACTION @TransactionName
+end try
+
+begin catch
+ROLLBACK TRANSACTION @TransactionName
+end catch

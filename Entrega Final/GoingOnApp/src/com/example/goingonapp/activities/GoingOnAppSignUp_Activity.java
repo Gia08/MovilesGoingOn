@@ -230,9 +230,10 @@ private int RegisterUser() {
 	}
 	
 	public void finishedAuth() {
-		Intent intent = new Intent(this, GoingOnAppMapEvent_Activity.class);
-		System.out.println("userMail es " + mEmail);
+		Intent intent = new Intent(this, GoingOnAppMain_Activity.class);
+		
 		intent.putExtra("userEmail", mEmail);
+		intent.putExtra("userType", 1);
 		intent.putExtra("fbEventsInfo", "null");
 		
 		// Verify it resolves

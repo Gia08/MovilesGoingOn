@@ -1,0 +1,14 @@
+DECLARE @TransactionName varchar(20) = 'GetAllEvents';
+BEGIN TRANSACTION @TransactionName
+
+begin try
+
+
+SELECT GoingOn.Event.id,GoingOn.Event.name, GoingOn.Event.description, GoingOn.Event.eventPrice, GoingOn.Event.startDate, GoingOn.Event.startTime, GoingOn.Event.idTypeEvent, GoingOn.Addresses.latitude, GoingOn.Addresses.longitude FROM GoingOn.Addresses Inner Join GoingOn.Event on GoingOn.Event.idAddress = GoingOn.Addresses.id;
+
+COMMIT  TRANSACTION @TransactionName
+end try
+begin catch
+
+ROLLBACK TRANSACTION @TransactionName
+end catch

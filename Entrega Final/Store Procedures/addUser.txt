@@ -1,0 +1,42 @@
+/**
+* Parameters
+* @name: nvarchar 50 
+* @password: nvarchar 50
+* @userName: varchar 50
+* @idClassUser: int
+* @idTypeUser: int
+* @idTypeUserLocal: int
+* @description: nvarchar 200
+* @latitude: decimal (18,5) 
+* @longitude: decimal (18.5) 
+* */
+
+DECLARE @TransactionName varchar(20) = 'addUser';
+BEGIN TRANSACTION @TransactionName
+begin try
+Declare @count int
+EXEC GoingOn.spCountUser @userName, @idClassUser, @count OUTPUT
+IF @count < 1
+BEGIN
+Declare @idAddress int
+EXEC GoingOn.spSetAddress  ' ',@latitude, @longitude, 1, @idAddress OUTPUT
+Declare @idPeople int
+EXEC GoingOn.spSetPerson @name, ' ', ' ', @userName, @idAddress , @idPeople OUTPUT
+Declare @result int
+SELECT @result =  coalesce(MAX(id), 0)+1 FROM GoingOn.Users
+INSERT GoingOn.Users(Username,Password,idTypeUser,idTypeUserLocal,idPerson,idClassUser,active,description) VALUES (@userName, @password, @idTypeUser, @idTypeUserLocal, @idPeople, @idClassUser, 1, @description)
+Select @result as result
+COMMIT  TRANSACTION @TransactionName
+END
+ELSE
+BEGIN
+SELECT @result = 0
+Select @result as result
+COMMIT  TRANSACTION @TransactionName
+END
+END try
+begin catch
+SELECT @result = 0
+Select @result as result
+ROLLBACK TRANSACTION @TransactionName
+END catch

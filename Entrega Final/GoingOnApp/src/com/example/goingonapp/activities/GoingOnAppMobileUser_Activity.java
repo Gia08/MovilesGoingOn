@@ -56,7 +56,8 @@ public class GoingOnAppMobileUser_Activity extends TabActivity {
         TabSpec tab2 = tabhost.newTabSpec("TicketsTab");
 		
         tab1.setIndicator("Events");
-        tab1.setContent(new Intent(this,GoingOnAppEventList_Activity.class));
+        Intent tabEventIntent = new Intent(this,GoingOnAppEventList_Activity.class);
+        tab1.setContent(tabEventIntent);
         
         tab2.setIndicator("Tickets");
         tab2.setContent(new Intent(this,GoingOnAppTicketsList_Activity.class));

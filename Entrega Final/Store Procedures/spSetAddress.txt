@@ -1,0 +1,24 @@
+/*
+*
+* Parameters
+*
+* @description: nvarchar 50
+* @latitude: decimal (18,5)
+* @longitude: decimal (18,5)
+* @idCity: int
+* @id: int (output)
+*
+*/
+
+DECLARE @TransactionName varchar(20) = 'spSetAddress';
+BEGIN TRANSACTION @TransactionName
+begin try
+
+SELECT @id =  coalesce(MAX(id), 0)+1 FROM GoingOn.Addresses
+INSERT GoingOn.Addresses(description,latitude,longitude,idCity) VALUES (@description, @latitude, @longitude, @idCity)
+COMMIT TRANSACTION @TransactionName
+end try
+begin catch
+
+ROLLBACK TRANSACTION @TransactionName
+end catch

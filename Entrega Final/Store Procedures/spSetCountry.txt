@@ -1,0 +1,21 @@
+/*
+*
+* Parameters
+*
+* @name: nvarchar 50
+* @id: int (output)
+*
+*/
+
+DECLARE @TransactionName varchar(20) = 'spSetCountry ';
+BEGIN TRANSACTION @TransactionName
+begin try
+
+SELECT @id =  coalesce(MAX(id), 0)+1 FROM GoingOn.Countries
+INSERT GoingOn.Countries(name) VALUES (@name)
+COMMIT TRANSACTION
+end try
+begin catch
+
+ROLLBACK TRANSACTION @TransactionName
+end catch

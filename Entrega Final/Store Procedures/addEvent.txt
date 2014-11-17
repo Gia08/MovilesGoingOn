@@ -1,0 +1,36 @@
+/**
+* Parameters
+* @name: nvarchar 50
+* @description: nvarchar 200
+* @startDate: date
+* @endDate: date
+* @startTime: time
+* @endTime: time 
+* @eventPrice: nvarchar
+* @idTypeEvent: int
+* @idTypePrivacyEvent: int 
+* @idTypeStateEvent: int
+* @latitude: decimal (18,5)
+* @longitude: decimal (18,5)
+* @Username: nvarchar 50
+**/
+DECLARE @TransactionName varchar(20) = 'addEvent';
+BEGIN TRANSACTION @TransactionName
+begin try
+Declare @idAddress int
+EXEC GoingOn.spSetAddress  ' ',@latitude, @longitude, 1, @idAddress OUTPUT
+Declare @idUsers int
+EXEC GoingOn.spGetIdUser @Username, @idUsers OUTPUT
+Declare @result int
+SELECT @result =  coalesce(MAX(id), 0)+1 FROM GoingOn.Event
+INSERT GoingOn.Event(name,description,startDate, endDate,startTime, endTime, eventPrice,idTypeEvent,idTypePrivacyEvent,idTypeStateEvent,idUsers,idAddress) VALUES (@name, @description,@startDate, @endDate, @startTime, @endTime,  @eventPrice, @idTypeEvent, @idTypePrivacyEvent, @idTypeStateEvent, @idUsers, @idAddress)
+Select @result as result
+COMMIT  TRANSACTION @TransactionName
+END try
+begin catch
+SELECT @result = 0
+Select @result as result
+ROLLBACK TRANSACTION @TransactionName
+END catch
+
+

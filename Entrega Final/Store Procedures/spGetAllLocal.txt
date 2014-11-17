@@ -1,0 +1,14 @@
+DECLARE @TransactionName varchar(20) = 'GetAllLocal';
+BEGIN TRANSACTION @TransactionName
+
+begin try
+
+
+SELECT GoingOn.Users.id, GoingOn.Users.description, GoingOn.Users.idTypeUserLocal, GoingOn.People.name, GoingOn.Addresses.latitude, GoingOn.Addresses.longitude  FROM GoingOn.Users Inner Join GoingOn.People on GoingOn.Users.idPerson = GoingOn.People.id AND GoingOn.Users.idTypeUser = 1  Inner Join GoingOn.Addresses on GoingOn.People.idAddress = GoingOn.Addresses.id ;
+
+COMMIT  TRANSACTION @TransactionName
+end try
+begin catch
+
+ROLLBACK TRANSACTION @TransactionName
+end catch
