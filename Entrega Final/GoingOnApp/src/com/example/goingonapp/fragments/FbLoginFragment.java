@@ -1,28 +1,9 @@
 package com.example.goingonapp.fragments;
 
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -38,19 +19,14 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
-import com.facebook.model.GraphObject;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 
 public class FbLoginFragment extends Fragment {
 	
-	private static final String TAG = "FbLoginFragment";
-	private static final String FB_LOGIN = "fblogin";
-	
-	private JSONArray events = null;
+	private static final String TAG = "FbLoginFragment";	
 	
 	private UiLifecycleHelper uiHelper;
-		
 
 	
 	@Override
@@ -148,7 +124,7 @@ public class FbLoginFragment extends Fragment {
 	    authButton.setFragment(this);
 	    //permissions
 	    List<String> permissions = new ArrayList<String>();
-	    permissions.add("basic_info");
+	    permissions.add("public_profile");
 	    permissions.add("email");
 	    permissions.add("user_events");
 	    authButton.setReadPermissions(permissions);

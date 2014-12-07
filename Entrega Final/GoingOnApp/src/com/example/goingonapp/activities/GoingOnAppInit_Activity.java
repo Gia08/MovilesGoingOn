@@ -2,16 +2,10 @@ package com.example.goingonapp.activities;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
 import com.example.goingonapp.R;
-import com.facebook.Session;
-
-
-
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
-import android.view.Menu;
 import android.view.Window;
 import android.view.WindowManager;
 

@@ -75,8 +75,6 @@ public class GoingOnAppMobileUser_Activity extends TabActivity {
 		
 		user = new RegisterUser(userMail);
 		
-		
-        setTabColor(tabhost);        
 	}
 
 	@Override
@@ -84,17 +82,6 @@ public class GoingOnAppMobileUser_Activity extends TabActivity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.going_on_app_mobile_user_, menu);
 		return true;
-	}
-	
-	private void setTabColor(TabHost tabhost) {
-	    for(int i=0;i < tabhost.getTabWidget().getChildCount();i++) {
-	    	
-	    	tabhost.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#FF0000")); //unselected
-	        
-	        TextView tv = (TextView) tabhost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-	        tv.setTextColor(getResources().getColor(R.color.GO_dark_gray));
-	    }
-	    tabhost.getTabWidget().getChildAt(tabhost.getCurrentTab()).setBackgroundColor(Color.parseColor("#0000FF")); // selected
 	}
 	
 	private Bitmap getRoundedShape(Bitmap scaleBitmapImage) {
@@ -121,9 +108,6 @@ public class GoingOnAppMobileUser_Activity extends TabActivity {
 	}
 	
 	public void gotomap(MenuItem menu) {
-		/*Intent intent = new Intent(this, MapActivity.class);
-        intent.putExtra("userEmail", user.getEmail());
-    	startActivity(intent);*/
 		finish();
 	}
 	
