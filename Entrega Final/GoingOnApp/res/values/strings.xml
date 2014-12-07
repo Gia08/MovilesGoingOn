@@ -37,7 +37,7 @@
     <string name="event_description">Event\'s description</string>
     <string name="event_price">Event\'s price</string>
     <string name="event_location">Event\'s location</string>
-    <string name="select_event_categorie">Select event categorie</string>
+    <string name="select_event_categorie">Select event\'s category</string>
 
     <string-array name="event_categories_array">
         <item>Concert</item>
@@ -66,10 +66,10 @@
 
     <!-- Resources for activity_going_on_app_signup -->
     <string name="signUp">Sign up</string>
-    <string name="prompt_userName">Nombre de Usuario</string>
-    <string name="prompt_emailConfirm">Confirmar Email</string>
-    <string name="prompt_passwordConf">Confirmar Password</string>
-    <string name="prompt_userDesc">Descripcion Usuario</string>
+    <string name="prompt_userName">User Name</string>
+    <string name="prompt_emailConfirm">Confirm Email</string>
+    <string name="prompt_passwordConf">Confirm Password</string>
+    <string name="prompt_userDesc">User Description</string>
     <string name="mobileUser">Mobile User</string>
     <string name="LocalUser">Local User</string>
     <string name="cancel">Cancel</string>

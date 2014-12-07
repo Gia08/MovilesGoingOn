@@ -20,12 +20,12 @@
         android:visibility="gone" >
 
         <ProgressBar
-		android:id="@+id/progressBar1"
-		style="?android:attr/progressBarStyleLarge"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_centerHorizontal="true" />
-        
+            android:id="@+id/progressBar1"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true" />
+
         <TextView
             android:id="@+id/login_status_message"
             android:layout_width="wrap_content"
@@ -34,92 +34,81 @@
             android:fontFamily="sans-serif-light"
             android:text="@string/login_progress_signing_in"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-        
     </LinearLayout>
 
     <!-- Login form -->
 
-        <LinearLayout
-            style="@style/LoginFormContainer"
+    <LinearLayout
+        style="@style/LoginFormContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="150dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:src="@drawable/go_logo_white" />
+
+        <EditText
+            android:id="@+id/email"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:orientation="vertical" >
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@layout/rectangle_login"
+            android:hint="@string/prompt_email"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:paddingLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:singleLine="true"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white" />
 
-            <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="150dp"
-                android:layout_height="0dp"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:src="@drawable/go_logo_white" />
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@layout/rectangle_login"
+            android:hint="@string/prompt_password"
+            android:imeActionId="@+id/login"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:paddingLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:singleLine="true"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white" />
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+        <Button
+            android:id="@+id/log_in_button"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="25dp"
+            android:layout_weight="1"
+            android:background="@layout/button_round_login"
+            android:paddingLeft="32dp"
+            android:paddingRight="32dp"
+            android:text="@string/action_log_in"
+            android:textColor="@android:color/white" />
 
-                <View
-                    android:id="@+id/myRectangleViewPhotos"
-                    android:layout_width="match_parent"
-                    android:layout_height="90dp"
-                    android:background="@layout/rectangle_login" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" >
-
-                    <EditText
-                        android:id="@+id/email"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:hint="@string/prompt_email"
-                        android:inputType="textEmailAddress"
-                        android:maxLines="1"
-                        android:paddingTop="15dp"
-                        android:singleLine="true" />
-
-                    <EditText
-                        android:id="@+id/password"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:hint="@string/prompt_password"
-                        android:imeActionId="@+id/login"
-                        android:imeActionLabel="@string/prompt_password"
-                        android:imeOptions="actionUnspecified"
-                        android:inputType="textPassword"
-                        android:maxLines="1"
-                        android:singleLine="true" />
-                </LinearLayout>
-            </FrameLayout>
-
-            <Button
-                android:id="@+id/log_in_button"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_gravity="right"
-                android:layout_marginTop="16dp"
-                android:layout_weight="1"
-                android:paddingLeft="32dp"
-                android:paddingRight="32dp"
-                android:background="@color/GO_light_gray"
-                android:text="@string/action_log_in" />
-
-            <Button
-                android:id="@+id/sign_in_button"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_gravity="right"
-                android:layout_marginTop="16dp"
-                android:layout_weight="1"
-                android:paddingLeft="32dp"
-                android:paddingRight="32dp"
-                android:background="@color/GO_light_gray"
-                android:text="@string/action_sign_up" />
-            
-           
-        </LinearLayout>
+        <Button
+            android:id="@+id/sign_in_button"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:layout_weight="1"
+            android:background="@layout/button_round_login"
+            android:paddingLeft="32dp"
+            android:paddingRight="32dp"
+            android:text="@string/action_sign_up"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
 
 </LinearLayout>
