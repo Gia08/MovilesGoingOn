@@ -726,7 +726,7 @@ containing a value of this type.
         public static final int action_logout=0x7f07007d;
         public static final int action_settings=0x7f07007a;
         public static final int action_user_profile=0x7f07007b;
-        public static final int authButton=0x7f070078;
+        public static final int authButton=0x7f070075;
         public static final int book_now=0x7f070010;
         public static final int bottom=0x7f070019;
         public static final int box_count=0x7f070018;
@@ -774,9 +774,9 @@ containing a value of this type.
         public static final int editText_event_name=0x7f070023;
         public static final int editText_event_price=0x7f070024;
         public static final int email=0x7f070047;
-        public static final int event_description=0x7f070077;
-        public static final int event_image=0x7f070075;
-        public static final int event_name=0x7f070076;
+        public static final int event_description=0x7f070078;
+        public static final int event_image=0x7f070076;
+        public static final int event_name=0x7f070077;
         public static final int fragment_going_on_app_init_container=0x7f07003d;
         public static final int fragment_going_on_app_login_container=0x7f070042;
         public static final int grayscale=0x7f070012;
@@ -864,7 +864,7 @@ containing a value of this type.
         public static final int activity_going_on_app_search=0x7f030009;
         public static final int activity_going_on_app_sign_up=0x7f03000a;
         public static final int activity_going_on_app_tickets_list=0x7f03000b;
-        public static final int activity_going_on_event_list=0x7f03000c;
+        public static final int activity_going_on_list=0x7f03000c;
         public static final int button_round_login=0x7f03000d;
         public static final int com_facebook_friendpickerfragment=0x7f03000e;
         public static final int com_facebook_login_activity_layout=0x7f03000f;
@@ -881,8 +881,8 @@ containing a value of this type.
         public static final int com_facebook_search_bar_layout=0x7f03001a;
         public static final int com_facebook_tooltip_bubble=0x7f03001b;
         public static final int com_facebook_usersettingsfragment=0x7f03001c;
-        public static final int event_list_item=0x7f03001d;
-        public static final int fragment_fb_login=0x7f03001e;
+        public static final int fragment_fb_login=0x7f03001d;
+        public static final int list_item=0x7f03001e;
         public static final int rectangle=0x7f03001f;
         public static final int rectangle_login=0x7f030020;
         public static final int tab_background_gradient=0x7f030021;

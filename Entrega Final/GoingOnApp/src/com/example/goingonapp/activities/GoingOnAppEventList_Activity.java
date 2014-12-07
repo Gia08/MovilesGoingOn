@@ -18,7 +18,7 @@ public class GoingOnAppEventList_Activity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_going_on_event_list);
+		setContentView(R.layout.activity_going_on_list);
 		
 		ListView lista = (ListView) findViewById(R.id.listaeventos);
 	      

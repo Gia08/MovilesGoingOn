@@ -45,7 +45,7 @@ public class EventsAdapter extends BaseAdapter {
 				//Associate the layout of the list created
 				if(convertView == null){
 					LayoutInflater inf = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-					v = inf.inflate(R.layout.event_list_item, null);
+					v = inf.inflate(R.layout.list_item, null);
 				}
 
 				// Create an event object

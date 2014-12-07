@@ -22,8 +22,7 @@ public class GoingOnAppInit_Activity extends Activity {
 			public void run() { 
 				Intent intent = new Intent(GoingOnAppInit_Activity.this, GoingOnAppLogin_Activity.class);
 				startActivity(intent);
-				finish();
-				
+				finish();				
 			}
 		}, 1000); 
     } 

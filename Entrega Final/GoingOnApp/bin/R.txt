@@ -236,7 +236,7 @@ int id action_add 0x7f07007c
 int id action_logout 0x7f07007d
 int id action_settings 0x7f07007a
 int id action_user_profile 0x7f07007b
-int id authButton 0x7f070078
+int id authButton 0x7f070075
 int id book_now 0x7f070010
 int id bottom 0x7f070019
 int id box_count 0x7f070018
@@ -284,9 +284,9 @@ int id editText_event_location 0x7f070026
 int id editText_event_name 0x7f070023
 int id editText_event_price 0x7f070024
 int id email 0x7f070047
-int id event_description 0x7f070077
-int id event_image 0x7f070075
-int id event_name 0x7f070076
+int id event_description 0x7f070078
+int id event_image 0x7f070076
+int id event_name 0x7f070077
 int id fragment_going_on_app_init_container 0x7f07003d
 int id fragment_going_on_app_login_container 0x7f070042
 int id grayscale 0x7f070012
@@ -370,7 +370,7 @@ int layout activity_going_on_app_mobile_user 0x7f030008
 int layout activity_going_on_app_search 0x7f030009
 int layout activity_going_on_app_sign_up 0x7f03000a
 int layout activity_going_on_app_tickets_list 0x7f03000b
-int layout activity_going_on_event_list 0x7f03000c
+int layout activity_going_on_list 0x7f03000c
 int layout button_round_login 0x7f03000d
 int layout com_facebook_friendpickerfragment 0x7f03000e
 int layout com_facebook_login_activity_layout 0x7f03000f
@@ -387,8 +387,8 @@ int layout com_facebook_placepickerfragment_list_row 0x7f030019
 int layout com_facebook_search_bar_layout 0x7f03001a
 int layout com_facebook_tooltip_bubble 0x7f03001b
 int layout com_facebook_usersettingsfragment 0x7f03001c
-int layout event_list_item 0x7f03001d
-int layout fragment_fb_login 0x7f03001e
+int layout fragment_fb_login 0x7f03001d
+int layout list_item 0x7f03001e
 int layout rectangle 0x7f03001f
 int layout rectangle_login 0x7f030020
 int layout tab_background_gradient 0x7f030021

@@ -1,32 +1,16 @@
 package com.example.goingonapp.activities;
 
 import java.net.MalformedURLException;
-import java.util.Dictionary;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import com.example.goingonapp.R;
-import com.example.goingonapp.R.layout;
-import com.example.goingonapp.R.menu;
-import com.example.goingonapp.objects.ContextEventsList;
-import com.example.goingonapp.objects.GetAllUserEventsResult;
 import com.example.goingonapp.objects.LoginUser;
-import com.example.goingonapp.objects.LoginUserResult;
 import com.example.goingonapp.objects.RegisterUser;
-import com.facebook.HttpMethod;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.microsoft.windowsazure.mobileservices.ApiJsonOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import android.os.Bundle;
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -36,7 +20,6 @@ import android.graphics.Color;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.util.Log;
-import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -65,7 +48,6 @@ public class GoingOnAppLocalProfile_Activity extends TabActivity {
 	 */
 	private TabHost tabhost;
 	private ImageView image;
-	private ProgressDialog pDialog;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,12 +81,6 @@ public class GoingOnAppLocalProfile_Activity extends TabActivity {
 		
 		
         setTabColor(tabhost);  
-        //pDialog = new ProgressDialog(GoingOnAppLocalProfile_Activity.this);
-        //pDialog.setMessage("Loading Info....");
-        //pDialog.setIndeterminate(false);
-        //pDialog.setCancelable(false);
-        //pDialog.show();
-        //getEventList();
 	}
 
 	@Override
