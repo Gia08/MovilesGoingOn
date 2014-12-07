@@ -1,0 +1,35 @@
+### Android ###
+# archivos de aplicaciones integradas
+* .apk
+* .ap_
+
+# archivos para el índice VM
+* .dex
+
+# archivos de clase Java
+* .class
+
+# archivos generados
+bin /
+gen /
+
+# Archivo de configuración local (ruta sdk, etc)
+local.properties
+
+Archivos de proyecto # Eclipse
+.classpath
+.project
+
+Carpeta # Proguard generada por Eclipse
+Proguard /
+
+Carpeta # Proguard generada por IntelliJ
+proguard_logs /
+
+# archivos de proyecto de IntelliJ
+* .iml
+* .ipr
+* .iws
+.idea /
+
+ADT-bundle-windows-x86_64 /
